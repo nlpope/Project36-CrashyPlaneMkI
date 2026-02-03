@@ -6,6 +6,22 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		400A9BE82F328F55003FE560 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BDE2F328F55003FE560 /* Assets.xcassets */; };
+		400A9BE92F328F55003FE560 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BDF2F328F55003FE560 /* GameScene.sks */; };
+		400A9BEA2F328F55003FE560 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BE32F328F55003FE560 /* LaunchScreen.storyboard */; };
+		400A9BEB2F328F55003FE560 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BE52F328F55003FE560 /* Main.storyboard */; };
+		400A9BEC2F328F55003FE560 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400A9BDD2F328F55003FE560 /* AppDelegate.swift */; };
+		400A9BED2F328F55003FE560 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400A9BE02F328F55003FE560 /* GameScene.swift */; };
+		400A9BEE2F328F55003FE560 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400A9BE12F328F55003FE560 /* GameViewController.swift */; };
+		400A9C0A2F329001003FE560 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 400A9C052F329001003FE560 /* README.txt */; };
+		400A9C0D2F329001003FE560 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A9C062F329001003FE560 /* spark.png */; };
+		400A9C122F329001003FE560 /* music.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 400A9C032F329001003FE560 /* music.m4a */; };
+		400A9C152F329001003FE560 /* PlayerExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 400A9C042F329001003FE560 /* PlayerExplosion.sks */; };
+		400A9C172F329001003FE560 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BF12F329001003FE560 /* explosion.wav */; };
+		400A9C1A2F329001003FE560 /* coin.wav in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BF02F329001003FE560 /* coin.wav */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		400A9BC02F328F29003FE560 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,14 +43,22 @@
 		400A9BA62F328F1F003FE560 /* Project36-CrashyPlaneMkI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project36-CrashyPlaneMkI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		400A9BBF2F328F29003FE560 /* Project36-CrashyPlaneMkITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Project36-CrashyPlaneMkITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		400A9BC92F328F29003FE560 /* Project36-CrashyPlaneMkIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Project36-CrashyPlaneMkIUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		400A9BDD2F328F55003FE560 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		400A9BDE2F328F55003FE560 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		400A9BDF2F328F55003FE560 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		400A9BE02F328F55003FE560 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		400A9BE12F328F55003FE560 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		400A9BE22F328F55003FE560 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		400A9BE42F328F55003FE560 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		400A9BF02F329001003FE560 /* coin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin.wav; sourceTree = "<group>"; };
+		400A9BF12F329001003FE560 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
+		400A9C032F329001003FE560 /* music.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = music.m4a; sourceTree = "<group>"; };
+		400A9C042F329001003FE560 /* PlayerExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PlayerExplosion.sks; sourceTree = "<group>"; };
+		400A9C052F329001003FE560 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		400A9C062F329001003FE560 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		400A9BA82F328F1F003FE560 /* Project36-CrashyPlaneMkI */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Project36-CrashyPlaneMkI";
-			sourceTree = "<group>";
-		};
 		400A9BC22F328F29003FE560 /* Project36-CrashyPlaneMkITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Project36-CrashyPlaneMkITests";
@@ -75,7 +99,7 @@
 		400A9B9D2F328F1F003FE560 = {
 			isa = PBXGroup;
 			children = (
-				400A9BA82F328F1F003FE560 /* Project36-CrashyPlaneMkI */,
+				400A9BE62F328F55003FE560 /* Project36-CrashyPlaneMkI */,
 				400A9BC22F328F29003FE560 /* Project36-CrashyPlaneMkITests */,
 				400A9BCC2F328F29003FE560 /* Project36-CrashyPlaneMkIUITests */,
 				400A9BA72F328F1F003FE560 /* Products */,
@@ -92,6 +116,42 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		400A9BE62F328F55003FE560 /* Project36-CrashyPlaneMkI */ = {
+			isa = PBXGroup;
+			children = (
+				400A9C1D2F329B57003FE560 /* Content */,
+				400A9BDD2F328F55003FE560 /* AppDelegate.swift */,
+				400A9BDE2F328F55003FE560 /* Assets.xcassets */,
+				400A9BDF2F328F55003FE560 /* GameScene.sks */,
+				400A9BE02F328F55003FE560 /* GameScene.swift */,
+				400A9BE12F328F55003FE560 /* GameViewController.swift */,
+				400A9BEF2F328F94003FE560 /* Support */,
+			);
+			path = "Project36-CrashyPlaneMkI";
+			sourceTree = "<group>";
+		};
+		400A9BEF2F328F94003FE560 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				400A9BE32F328F55003FE560 /* LaunchScreen.storyboard */,
+				400A9BE52F328F55003FE560 /* Main.storyboard */,
+				400A9C052F329001003FE560 /* README.txt */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		400A9C1D2F329B57003FE560 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				400A9BF02F329001003FE560 /* coin.wav */,
+				400A9BF12F329001003FE560 /* explosion.wav */,
+				400A9C032F329001003FE560 /* music.m4a */,
+				400A9C042F329001003FE560 /* PlayerExplosion.sks */,
+				400A9C062F329001003FE560 /* spark.png */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -106,9 +166,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				400A9BA82F328F1F003FE560 /* Project36-CrashyPlaneMkI */,
 			);
 			name = "Project36-CrashyPlaneMkI";
 			packageProductDependencies = (
@@ -212,6 +269,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				400A9C0A2F329001003FE560 /* README.txt in Resources */,
+				400A9C0D2F329001003FE560 /* spark.png in Resources */,
+				400A9C122F329001003FE560 /* music.m4a in Resources */,
+				400A9C152F329001003FE560 /* PlayerExplosion.sks in Resources */,
+				400A9C172F329001003FE560 /* explosion.wav in Resources */,
+				400A9C1A2F329001003FE560 /* coin.wav in Resources */,
+				400A9BE82F328F55003FE560 /* Assets.xcassets in Resources */,
+				400A9BE92F328F55003FE560 /* GameScene.sks in Resources */,
+				400A9BEA2F328F55003FE560 /* LaunchScreen.storyboard in Resources */,
+				400A9BEB2F328F55003FE560 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +303,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				400A9BEC2F328F55003FE560 /* AppDelegate.swift in Sources */,
+				400A9BED2F328F55003FE560 /* GameScene.swift in Sources */,
+				400A9BEE2F328F55003FE560 /* GameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +337,25 @@
 			targetProxy = 400A9BCA2F328F29003FE560 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		400A9BE32F328F55003FE560 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				400A9BE22F328F55003FE560 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		400A9BE52F328F55003FE560 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				400A9BE42F328F55003FE560 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		400A9BD12F328F29003FE560 /* Debug */ = {
@@ -403,8 +492,8 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -431,8 +520,8 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
