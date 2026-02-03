@@ -7,8 +7,7 @@ import GameplayKit
 
 class GameScene: SKScene
 {
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var player: SKSpriteNode!
     
     override func didMove(to view: SKView)
     {
@@ -18,6 +17,6 @@ class GameScene: SKScene
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        
+        let playerTexture = SKTexture(imageNamed: PlayerKeys.player1)
     }
 }
