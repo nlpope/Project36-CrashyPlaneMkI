@@ -101,6 +101,7 @@
 		400A9B9D2F328F1F003FE560 = {
 			isa = PBXGroup;
 			children = (
+				400A9C052F329001003FE560 /* README.txt */,
 				400A9BE62F328F55003FE560 /* Project36-CrashyPlaneMkI */,
 				400A9BC22F328F29003FE560 /* Project36-CrashyPlaneMkITests */,
 				400A9BCC2F328F29003FE560 /* Project36-CrashyPlaneMkIUITests */,
@@ -121,13 +122,10 @@
 		400A9BE62F328F55003FE560 /* Project36-CrashyPlaneMkI */ = {
 			isa = PBXGroup;
 			children = (
+				400A9C272F33DF30003FE560 /* Sks */,
 				400A9C1E2F32A409003FE560 /* Utilities */,
+				400A9C322F33E0D4003FE560 /* Screens */,
 				400A9C1D2F329B57003FE560 /* Content */,
-				400A9BDD2F328F55003FE560 /* AppDelegate.swift */,
-				400A9BDE2F328F55003FE560 /* Assets.xcassets */,
-				400A9BDF2F328F55003FE560 /* GameScene.sks */,
-				400A9BE02F328F55003FE560 /* GameScene.swift */,
-				400A9BE12F328F55003FE560 /* GameViewController.swift */,
 				400A9BEF2F328F94003FE560 /* Support */,
 			);
 			path = "Project36-CrashyPlaneMkI";
@@ -136,9 +134,11 @@
 		400A9BEF2F328F94003FE560 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				400A9BDD2F328F55003FE560 /* AppDelegate.swift */,
+				400A9BE12F328F55003FE560 /* GameViewController.swift */,
 				400A9BE32F328F55003FE560 /* LaunchScreen.storyboard */,
 				400A9BE52F328F55003FE560 /* Main.storyboard */,
-				400A9C052F329001003FE560 /* README.txt */,
+				400A9BDE2F328F55003FE560 /* Assets.xcassets */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -149,7 +149,6 @@
 				400A9BF02F329001003FE560 /* coin.wav */,
 				400A9BF12F329001003FE560 /* explosion.wav */,
 				400A9C032F329001003FE560 /* music.m4a */,
-				400A9C042F329001003FE560 /* PlayerExplosion.sks */,
 				400A9C062F329001003FE560 /* spark.png */,
 			);
 			path = Content;
@@ -161,6 +160,23 @@
 				400A9C1F2F32A429003FE560 /* Constants+Utils.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		400A9C272F33DF30003FE560 /* Sks */ = {
+			isa = PBXGroup;
+			children = (
+				400A9BDF2F328F55003FE560 /* GameScene.sks */,
+				400A9C042F329001003FE560 /* PlayerExplosion.sks */,
+			);
+			path = Sks;
+			sourceTree = "<group>";
+		};
+		400A9C322F33E0D4003FE560 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				400A9BE02F328F55003FE560 /* GameScene.swift */,
+			);
+			path = Screens;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

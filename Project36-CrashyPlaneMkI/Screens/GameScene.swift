@@ -39,4 +39,16 @@ class GameScene: SKScene
         
         player.run(runForever)
     }
+    
+    
+    func createSky()
+    {
+        let topSky = SKSpriteNode(color: UIColor(hue: 0.55,
+                                                 saturation: 0.14,
+                                                 brightness: 0.97,
+                                                 alpha: 1),
+                                  size: CGSize(width: frame.width,
+                                               height: frame.height * 0.67)
+        )
+    }
 }
