@@ -7,4 +7,6 @@ import Foundation
 enum PlayerKeys
 {
     static let player1 = "player-1"
+    static let player2 = "player-2"
+    static let player3 = "player-3"
 }
