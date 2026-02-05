@@ -11,8 +11,8 @@ class GameScene: SKScene
     
     override func didMove(to view: SKView)
     {
-//        createSky()
         createPlayer()
+        createSky()
     }
     
     
@@ -33,12 +33,12 @@ class GameScene: SKScene
         
         addChild(player)
         
-//        let playerTextureFrame2 = SKTexture(imageNamed: PlayerKeys.player2)
-//        let playerTextureFrame3 = SKTexture(imageNamed: PlayerKeys.player3)
-//        let animation = SKAction.animate(with: [playerTextureFrame1, playerTextureFrame2, playerTextureFrame3], timePerFrame: 0.01)
-//        let runForever = SKAction.repeatForever(animation)
-//        
-//        player.run(runForever)
+        let playerTextureFrame2 = SKTexture(imageNamed: PlayerKeys.player2)
+        let playerTextureFrame3 = SKTexture(imageNamed: PlayerKeys.player3)
+        let animation = SKAction.animate(with: [playerTextureFrame1, playerTextureFrame2, playerTextureFrame3], timePerFrame: 0.01)
+        let runForever = SKAction.repeatForever(animation)
+        
+        player.run(runForever)
     }
     
     
@@ -63,11 +63,12 @@ class GameScene: SKScene
         topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         topSky.position = CGPoint(x: frame.midX, y: frame.height)
-        bottomSky.position = CGPoint(x: frame.midX, y: frame.height)
+        bottomSky.position = CGPoint(x: frame.midX, y: bottomSky.frame.height)
+        topSky.zPosition = -40
+        bottomSky.zPosition = -40
         
         
         addChildren(topSky, bottomSky)
-        topSky.zPosition = -40
-        bottomSky.zPosition = -40
+        
     }
 }
