@@ -13,6 +13,7 @@ class GameScene: SKScene
     {
         createPlayer()
         createSky()
+        createBackground()
     }
     
     
@@ -26,16 +27,16 @@ class GameScene: SKScene
     
     func createPlayer()
     {
-        let playerTextureFrame1 = SKTexture(imageNamed: PlayerKeys.player1)
-        player = SKSpriteNode(texture: playerTextureFrame1)
+        let heliFrame1Texture = SKTexture(imageNamed: TextureKeys.heliFrame1)
+        player = SKSpriteNode(texture: heliFrame1Texture)
         player.zPosition = 10
         player.position = CGPoint(x: frame.width / 6, y: frame.height * 0.75)
         
         addChild(player)
         
-        let playerTextureFrame2 = SKTexture(imageNamed: PlayerKeys.player2)
-        let playerTextureFrame3 = SKTexture(imageNamed: PlayerKeys.player3)
-        let animation = SKAction.animate(with: [playerTextureFrame1, playerTextureFrame2, playerTextureFrame3], timePerFrame: 0.01)
+        let heliFrame2Texture = SKTexture(imageNamed: TextureKeys.heliFrame2)
+        let heliFrame3Texture = SKTexture(imageNamed: TextureKeys.heliFrame3)
+        let animation = SKAction.animate(with: [heliFrame1Texture, heliFrame2Texture, heliFrame3Texture], timePerFrame: 0.01)
         let runForever = SKAction.repeatForever(animation)
         
         player.run(runForever)
@@ -44,6 +45,7 @@ class GameScene: SKScene
     
     func createSky()
     {
+        //I think these are spriteNodes for the simple fact that I cant create a texture out of thin air specifying only a color. I think the sky could be swapped for a texture though since it's not needing to be manipulated (? i was wrong, background ended up being a node anyways)
         let topSky = SKSpriteNode(color: UIColor(hue: 0.55,
                                                  saturation: 0.14,
                                                  brightness: 0.97,
@@ -59,7 +61,7 @@ class GameScene: SKScene
                                      size: CGSize(width: frame.width,
                                                   height: frame.height * 0.33)
         )
-        
+                
         topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         topSky.position = CGPoint(x: frame.midX, y: frame.height)
@@ -67,8 +69,27 @@ class GameScene: SKScene
         topSky.zPosition = -40
         bottomSky.zPosition = -40
         
-        
         addChildren(topSky, bottomSky)
+    }
+    
+    
+    func createBackground()
+    {
+        let backgroundTexture = SKTexture(imageNamed: TextureKeys.background)
         
+        for i in 0 ... 1 {
+            let background = SKSpriteNode(texture: backgroundTexture)
+            background.zPosition = -30
+            background.anchorPoint = CGPoint.zero
+            background.position = CGPoint(x: (backgroundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 100)
+            
+            addChild(background)
+            
+            let moveLeft = SKAction.moveBy(x: -backgroundTexture.size().width, y: 0, duration: 20)
+            let moveReset = SKAction.moveBy(x: backgroundTexture.size().width, y: 0, duration: 0)
+            let moveLoop = SKAction.sequence([moveLeft, moveReset])
+            let moveForever = SKAction.repeatForever(moveLoop)
+            background.run(moveForever)
+        }
     }
 }

@@ -4,9 +4,11 @@
 
 import Foundation
 
-enum PlayerKeys
+enum TextureKeys
 {
-    static let player1 = "player-1"
-    static let player2 = "player-2"
-    static let player3 = "player-3"
+    static let heliFrame1 = "heliFrame1"
+    static let heliFrame2 = "heliFrame2"
+    static let heliFrame3 = "heliFrame3"
+    
+    static let background = "background"
 }
