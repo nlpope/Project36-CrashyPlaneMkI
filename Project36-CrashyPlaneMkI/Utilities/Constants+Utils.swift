@@ -11,4 +11,5 @@ enum TextureKeys
     static let heliFrame3 = "heliFrame3"
     
     static let background = "background"
+    static let ground = "ground"
 }
