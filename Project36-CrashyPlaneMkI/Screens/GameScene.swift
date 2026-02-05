@@ -12,7 +12,6 @@ class GameScene: SKScene
     override func didMove(to view: SKView)
     {
 //        createSky()
-
         createPlayer()
     }
     
@@ -34,12 +33,12 @@ class GameScene: SKScene
         
         addChild(player)
         
-        let playerTextureFrame2 = SKTexture(imageNamed: PlayerKeys.player2)
-        let playerTextureFrame3 = SKTexture(imageNamed: PlayerKeys.player3)
-        let animation = SKAction.animate(with: [playerTextureFrame1, playerTextureFrame2, playerTextureFrame3], timePerFrame: 0.01)
-        let runForever = SKAction.repeatForever(animation)
-        
-        player.run(runForever)
+//        let playerTextureFrame2 = SKTexture(imageNamed: PlayerKeys.player2)
+//        let playerTextureFrame3 = SKTexture(imageNamed: PlayerKeys.player3)
+//        let animation = SKAction.animate(with: [playerTextureFrame1, playerTextureFrame2, playerTextureFrame3], timePerFrame: 0.01)
+//        let runForever = SKAction.repeatForever(animation)
+//        
+//        player.run(runForever)
     }
     
     
