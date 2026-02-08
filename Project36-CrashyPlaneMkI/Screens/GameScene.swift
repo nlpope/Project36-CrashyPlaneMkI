@@ -8,7 +8,10 @@ import GameplayKit
 class GameScene: SKScene
 {
     var player: SKSpriteNode!
-    var playerScore: Int!
+    var scoreBoard: SKLabelNode!
+    var playerScore = 0 {
+        didSet { scoreBoard.text = "SCORE: \(playerScore)" }
+    }
     
     override func didMove(to view: SKView)
     {
@@ -136,7 +139,6 @@ class GameScene: SKScene
         topObstacleRock.zRotation = .pi
         #warning("i dont get xscale")
         topObstacleRock.xScale = -1.0
-        //why is anchor point zero not needed?
         topObstacleRock.zPosition = -20
         
         let bottomObstacleRock = SKSpriteNode(texture: obstacleRockTexture)
