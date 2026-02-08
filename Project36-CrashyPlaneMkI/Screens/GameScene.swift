@@ -149,13 +149,13 @@ class GameScene: SKScene
         )
         goalPost.name  = NameKeys.goalPost
         
-//        addChildren(topObstacleRock, bottomObstacleRock, goalPost)
-
         //-------------------------------------//
         let xPosition = frame.width + topObstacleRock.frame.width
-        let max = CGFloat(frame.height / 3)
-//        let yPosition = CGFloat.random(in: -50...max) //problem child
-        let yPosition = CGFloat.random(in: -50...max)
+        let maxY = CGFloat(frame.height / 3)
+        //yPosition determines where safe gaps in rocks should be
+        //setting low range to be 110 as anything below that value
+        //e.g. -50 results in my top rock floating off the top view
+        let yPosition = CGFloat.random(in: 110...maxY)
         let rockDistance: CGFloat = 70
         
         topObstacleRock.position = CGPoint(
@@ -164,15 +164,18 @@ class GameScene: SKScene
         )
         
         print("------------------------------")
+        print("frame height: \(frame.height)")
+        print("1/3 of frame height: \(frame.height / 3)")
         print("cgpoint.y = yposition: \(yPosition)")
         print(" + rock.size.height: \(topObstacleRock.size.height)")
         print("+ rockDistance: \(rockDistance)")
-        print(topObstacleRock.position.y)//so it's lower the smaller y is and higher the bigger y is
+        print("so toprocks cgpoint.y = \(topObstacleRock.position.y)")
         
         bottomObstacleRock.position = CGPoint(
             x: xPosition,
             y: yPosition - rockDistance
         )
+        
         goalPost.position = CGPoint(
             x: xPosition + (goalPost.size.width * 2),
             y: frame.midY
@@ -207,7 +210,7 @@ class GameScene: SKScene
             self.createObstacles()
         }
         
-        let wait = SKAction.wait(forDuration: 3)
+        let wait = SKAction.wait(forDuration:2)
         let sequence = SKAction.sequence([create, wait])
         let repeatForever = SKAction.repeatForever(sequence)
         run(repeatForever)
