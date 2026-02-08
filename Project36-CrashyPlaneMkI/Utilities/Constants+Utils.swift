@@ -19,3 +19,8 @@ enum NameKeys
 {
     static let goalPost = "goalPost"
 }
+
+enum FontKeys
+{
+    static let optimaExtraBlack = "optima-ExtraBlack"
+}

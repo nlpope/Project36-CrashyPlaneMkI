@@ -19,6 +19,7 @@ class GameScene: SKScene
         createSky()
         createBackground()
         createGround()
+        createScoreBoard()
         startRocks()
     }
     
@@ -29,7 +30,7 @@ class GameScene: SKScene
     }
     
     //-------------------------------------//
-    // MARK: - SUPPORTING METHODS
+    // MARK: - CONFIGURATION
     
     func createPlayer()
     {
@@ -137,7 +138,6 @@ class GameScene: SKScene
         //-------------------------------------//
         let topObstacleRock = SKSpriteNode(texture: obstacleRockTexture)
         topObstacleRock.zRotation = .pi
-        #warning("i dont get xscale")
         topObstacleRock.xScale = -1.0
         topObstacleRock.zPosition = -20
         
@@ -206,6 +206,23 @@ class GameScene: SKScene
     }
     
     
+    func createScoreBoard()
+    {
+        scoreBoard = SKLabelNode(fontNamed: FontKeys.optimaExtraBlack)
+        scoreBoard.fontSize = 24
+        scoreBoard.text = "SCORE: 0"
+        scoreBoard.fontColor = UIColor.black
+        scoreBoard.position = CGPoint(
+            x: frame.midX,
+            y: frame.maxY - 60
+        )
+        
+        addChild(scoreBoard)
+    }
+    
+    //-------------------------------------//
+    // MARK: - INITIALIZATION
+    
     func startRocks()
     {
         let create = SKAction.run { [unowned self] in
@@ -217,4 +234,9 @@ class GameScene: SKScene
         let repeatForever = SKAction.repeatForever(sequence)
         run(repeatForever)
     }
+    
+    //-------------------------------------//
+    // MARK: - SCORE KEEPING
+    
+    
 }
