@@ -17,5 +17,5 @@ enum TextureKeys
 
 enum NameKeys
 {
-    static let scoreDetect = "scoreDetect"
+    static let goalPost = "goalPost"
 }
