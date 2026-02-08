@@ -8,6 +8,7 @@ import GameplayKit
 class GameScene: SKScene
 {
     var player: SKSpriteNode!
+    var playerScore: Int!
     
     override func didMove(to view: SKView)
     {
@@ -15,6 +16,7 @@ class GameScene: SKScene
         createSky()
         createBackground()
         createGround()
+        createRocks()
     }
     
     
@@ -107,7 +109,7 @@ class GameScene: SKScene
             let ground = SKSpriteNode(texture: groundTexture)
             ground.zPosition = -10
             
-            ground.anchorPoint = CGPoint.zero 
+            ground.anchorPoint = CGPoint.zero
             ground.position = CGPoint(
                 x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i),
                 y: 0
@@ -122,5 +124,70 @@ class GameScene: SKScene
             
             ground.run(moveForever)
         }
+    }
+    
+    
+    func createRocks()
+    {
+        let obstacleRockTexture = SKTexture(imageNamed: TextureKeys.obstacleRock)
+        
+        //-------------------------------------//
+        #warning("only triggering obstacles 1ce. and they look too big. plus i still dont get the xscale = -1.0 thing")
+        let topObstacleRock = SKSpriteNode(texture: obstacleRockTexture)
+        topObstacleRock.zRotation = .pi
+        topObstacleRock.xScale = -1.0
+        //why is anchor point zero not needed?
+        topObstacleRock.zPosition = -20
+        
+        let bottomObstacleRock = SKSpriteNode(texture: obstacleRockTexture)
+        bottomObstacleRock.xScale = -1.0
+        bottomObstacleRock.zPosition = -20
+        
+        //-------------------------------------//
+        let rockCollision = SKSpriteNode(
+            color: UIColor.red,
+            size: CGSize(width: 32, height: frame.height)
+        )
+        rockCollision.name  = NameKeys.scoreDetect
+
+        //-------------------------------------//
+        let xPosition = frame.width + topObstacleRock.frame.width
+        let max = CGFloat(frame.height / 3)
+        let yPosition = CGFloat.random(in: -50...max)
+        let rockDistance: CGFloat = 70
+        
+        topObstacleRock.position = CGPoint(
+            x: xPosition,
+            y: yPosition + topObstacleRock.size.height + rockDistance
+        )
+        bottomObstacleRock.position = CGPoint(
+            x: xPosition,
+            y: yPosition + bottomObstacleRock.size.height - rockDistance
+        )
+        rockCollision.position = CGPoint(
+            x: xPosition + (rockCollision.size.width * 2),
+            y: frame.midY
+        )
+        
+        //-------------------------------------//
+        let endPosition = frame.width + (topObstacleRock.frame.width * 2)
+        
+        let moveAction = SKAction.moveBy(
+            x: -endPosition,
+            y: 0,
+            duration: 6.2
+        )
+        
+        let moveSequence = SKAction.sequence([
+            moveAction,
+            SKAction.removeFromParent()
+        ])
+        
+        //-------------------------------------//
+        topObstacleRock.run(moveSequence)
+        bottomObstacleRock.run(moveSequence)
+        rockCollision.run(moveSequence)
+        
+        addChildren(topObstacleRock, bottomObstacleRock, rockCollision)
     }
 }

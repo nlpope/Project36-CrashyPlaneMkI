@@ -12,4 +12,10 @@ enum TextureKeys
     
     static let background = "background"
     static let ground = "ground"
+    static let obstacleRock = "rock"
+}
+
+enum NameKeys
+{
+    static let scoreDetect = "scoreDetect"
 }
