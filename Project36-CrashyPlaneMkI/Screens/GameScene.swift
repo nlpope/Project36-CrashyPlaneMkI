@@ -84,7 +84,8 @@ class GameScene: SKScene
             background.anchorPoint = CGPoint.zero
             background.position = CGPoint(
                 x: (backgroundTexture.size().width * CGFloat(i)) - CGFloat(1 * i),
-                y: 100)
+                y: 100
+            )
             
             addChild(background)
             
@@ -105,10 +106,12 @@ class GameScene: SKScene
         for i in 0 ... 1 {
             let ground = SKSpriteNode(texture: groundTexture)
             ground.zPosition = -10
-            ground.anchorPoint = CGPoint.zero
+            
+            ground.anchorPoint = CGPoint.zero 
             ground.position = CGPoint(
                 x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i),
-                y: 0)
+                y: 0
+            )
             
             addChild(ground)
             
