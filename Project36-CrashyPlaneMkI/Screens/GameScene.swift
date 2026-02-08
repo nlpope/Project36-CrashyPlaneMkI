@@ -213,7 +213,7 @@ class GameScene: SKScene
         scoreBoard.text = "SCORE: 0"
         scoreBoard.fontColor = UIColor.black
         scoreBoard.position = CGPoint(
-            x: frame.midX,
+            x: frame.maxX - 70,
             y: frame.maxY - 60
         )
         
