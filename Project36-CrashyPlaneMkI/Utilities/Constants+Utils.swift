@@ -12,11 +12,14 @@ enum TextureKeys
     
     static let background = "background"
     static let ground = "ground"
-    static let obstacleRock = "rock"
+    static let rockObstacle = "rock"
 }
 
 enum NameKeys
 {
+    static let player = "player"
+    static let ground = "ground"
+    static let rock = "rock"
     static let goalPost = "goalPost"
 }
 
