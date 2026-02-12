@@ -5,7 +5,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene
+class GameScene: SKScene, SKPhysicsContactDelegate
 {
     var player: SKSpriteNode!
     var scoreBoard: SKLabelNode!
@@ -21,6 +21,8 @@ class GameScene: SKScene
         createGround()
         createScoreBoard()
         startRocks()
+        //report collisions to game scnee
+        //add method - configPhysicsWorld
     }
     
     
@@ -32,6 +34,31 @@ class GameScene: SKScene
     //-------------------------------------//
     // MARK: - CONFIGURATION
     
+    func configWorldPhysics()
+    {
+        physicsWorld.contactDelegate = self
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -5.0)
+    }
+    
+    
+    func configPlayerPhysics(for player: SKSpriteNode)
+    {
+        guard let playerTexture = player.texture else { return }
+        //creates pixel-perfect physics
+        player.physicsBody = SKPhysicsBody(texture: playerTexture, size: playerTexture.size())
+        //tells us when the player collides w anything
+        //wasteful in some games but  here the player dies if they touch anything so it's okay
+        player.physicsBody!.contactTestBitMask = player.physicsBody!.collisionBitMask
+        //isDynamic makes the plae respond to physics
+        //true = default but including it so we can change it later
+        player.physicsBody?.isDynamic = true
+        //makes the plane bounce off nothing
+//        player.physicsBody?.collisionBitMask = 0
+    }
+    
+    //-------------------------------------//
+    // MARK: - ASSET CREATION
+    
     func createPlayer()
     {
         let heliFrame1Texture = SKTexture(imageNamed: TextureKeys.heliFrame1)
@@ -40,6 +67,8 @@ class GameScene: SKScene
         player.position = CGPoint(x: frame.width / 6, y: frame.height * 0.75)
         
         addChild(player)
+        
+        configPlayerPhysics(for: player)
         
         let heliFrame2Texture = SKTexture(imageNamed: TextureKeys.heliFrame2)
         let heliFrame3Texture = SKTexture(imageNamed: TextureKeys.heliFrame3)
