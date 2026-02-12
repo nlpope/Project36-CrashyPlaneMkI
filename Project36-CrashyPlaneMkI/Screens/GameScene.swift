@@ -53,12 +53,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configPhysics(for node: SKSpriteNode)
     {
-        guard let nodeTexture = node.texture else { return }
+//        guard let nodeTexture = node.texture else { return }
         
         switch node.name {
         case NameKeys.player:
+            print("player switch reached")
             //creates pixel-perfect physics
-            node.physicsBody = SKPhysicsBody(texture: nodeTexture, size: nodeTexture.size())
+            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             //tells us when the player collides w anything
             //wasteful in some games but  here the player dies if they touch anything so it's okay
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
@@ -68,14 +69,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             //makes the plane bounce off nothing
             node.physicsBody?.collisionBitMask = 0
         case NameKeys.ground:
-            node.physicsBody = SKPhysicsBody(texture: nodeTexture, size: nodeTexture.size())
+            print("ground switch reached")
+            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 0
         case NameKeys.rock:
-            node.physicsBody = SKPhysicsBody(texture: nodeTexture, size: nodeTexture.size())
+            print("rock switch reached - should see 2 in a row")
+            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 2
         case NameKeys.goalPost:
+            print("goal post switch reached")
+            node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
+            node.physicsBody?.isDynamic = false
         default:
             return
         }
@@ -212,6 +218,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let obstacleRockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
         
         //-------------------------------------//
+        #warning("only one rock registering at a time - top i think")
         let topRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
         topRockObstacle.name = "rock"
         configPhysics(for: topRockObstacle)
@@ -227,11 +234,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         bottomRockObstacle.zPosition = -20
 //        configPhysics(for: bottomRockObstacle)
         
+        //AKA rockCollision
         let goalPost = SKSpriteNode(
             color: UIColor.red,
             size: CGSize(width: 32, height: frame.height)
         )
         goalPost.name  = NameKeys.goalPost
+        configPhysics(for: goalPost)
         
         //-------------------------------------//
         let xPosition = frame.width + topRockObstacle.frame.width
