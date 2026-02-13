@@ -69,17 +69,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             //makes the plane bounce off nothing
 //            node.physicsBody?.collisionBitMask = 0
         case NameKeys.ground:
-            print("ground switch reached")
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 0
-        case "rock1", "rock2":
-            print("rock switch reached - should see 2 in a row")
+        case NameKeys.rock:
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 2
         case NameKeys.goalPost:
-            print("goal post switch reached")
             node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
             node.physicsBody?.isDynamic = false
         default:
@@ -215,7 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         //-------------------------------------//
         let topRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        topRockObstacle.name = "rock1"
+        topRockObstacle.name = "rock"
         /**
          configging the physics here, before all the below manipulation
          keeps the pixel perfect contact rather than a distorted one that's too far or close to the texture
@@ -228,7 +225,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 //        topRockObstacle.physicsBody?.isDynamic = false
         
         let bottomRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        bottomRockObstacle.name = "rock2"
+        bottomRockObstacle.name = NameKeys.rock
         configPhysics(for: bottomRockObstacle)
         bottomRockObstacle.xScale = -1.0
         bottomRockObstacle.zPosition = -20
