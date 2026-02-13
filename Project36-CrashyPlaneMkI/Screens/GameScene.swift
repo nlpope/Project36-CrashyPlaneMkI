@@ -67,13 +67,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             //true = default but including it so we can change it later
             node.physicsBody?.isDynamic = true
             //makes the plane bounce off nothing
-            node.physicsBody?.collisionBitMask = 0
+//            node.physicsBody?.collisionBitMask = 0
         case NameKeys.ground:
             print("ground switch reached")
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 0
-        case NameKeys.rock:
+        case "rock1", "rock2":
             print("rock switch reached - should see 2 in a row")
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
@@ -218,29 +218,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let obstacleRockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
         
         //-------------------------------------//
-        #warning("only one rock registering at a time - top i think")
         let topRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        topRockObstacle.name = "rock"
+        topRockObstacle.name = "rock1"
+        
+        /**
+         configging the physics here, before all the below manipulation
+         keeps the pixel perfect contact rather than a distorted one that's too far or close to the texture
+         */
         configPhysics(for: topRockObstacle)
         topRockObstacle.zRotation = .pi
         topRockObstacle.xScale = -1.0
         topRockObstacle.zPosition = -20
-//        configPhysics(for: topRockObstacle)
+//        topRockObstacle.physicsBody = SKPhysicsBody(texture: topRockObstacle.texture!, size: topRockObstacle.texture!.size())
+//        topRockObstacle.physicsBody?.isDynamic = false
         
         let bottomRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        topRockObstacle.name = "rock"
+        bottomRockObstacle.name = "rock2"
         configPhysics(for: bottomRockObstacle)
         bottomRockObstacle.xScale = -1.0
         bottomRockObstacle.zPosition = -20
-//        configPhysics(for: bottomRockObstacle)
+//        bottomRockObstacle.physicsBody = SKPhysicsBody(texture: bottomRockObstacle.texture!, size: bottomRockObstacle.texture!.size())
+//        bottomRockObstacle.physicsBody?.isDynamic = false
         
         //AKA rockCollision
         let goalPost = SKSpriteNode(
             color: UIColor.red,
             size: CGSize(width: 32, height: frame.height)
         )
+        
         goalPost.name  = NameKeys.goalPost
-        configPhysics(for: goalPost)
+//        configPhysics(for: goalPost)
         
         //-------------------------------------//
         let xPosition = frame.width + topRockObstacle.frame.width
@@ -277,6 +284,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
+//        configPhysics(for: topRockObstacle)
+//        configPhysics(for: bottomRockObstacle)
+//        configPhysics(for: goalPost)
         addChildren(topRockObstacle, bottomRockObstacle, goalPost)
 
         //-------------------------------------//
