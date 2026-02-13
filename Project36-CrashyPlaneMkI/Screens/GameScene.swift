@@ -110,13 +110,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let heliFrame1Texture = SKTexture(imageNamed: TextureKeys.heliFrame1)
         player = SKSpriteNode(texture: heliFrame1Texture)
         player.name = NameKeys.player
+        configPhysics(for: player)
         player.zPosition = 10
         player.position = CGPoint(x: frame.width / 6, y: frame.height * 0.75)
         
         addChild(player)
-        
-//        configPlayerPhysics(for: player)
-        configPhysics(for: player)
         
         let heliFrame2Texture = SKTexture(imageNamed: TextureKeys.heliFrame2)
         let heliFrame3Texture = SKTexture(imageNamed: TextureKeys.heliFrame3)
@@ -191,16 +189,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         for i in 0 ... 1 {
             let ground = SKSpriteNode(texture: groundTexture)
             ground.name = NameKeys.ground
+            configPhysics(for: ground)
             ground.zPosition = -10
-            
             ground.anchorPoint = CGPoint.zero
             ground.position = CGPoint(
                 x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i),
                 y: 0
             )
-            
-            configPhysics(for: ground)
-            
+                        
             addChild(ground)
             
             let moveLeft = SKAction.moveBy(x: -groundTexture.size().width, y: 0, duration: 5)
@@ -220,7 +216,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         //-------------------------------------//
         let topRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
         topRockObstacle.name = "rock1"
-        
         /**
          configging the physics here, before all the below manipulation
          keeps the pixel perfect contact rather than a distorted one that's too far or close to the texture
@@ -247,7 +242,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         )
         
         goalPost.name  = NameKeys.goalPost
-//        configPhysics(for: goalPost)
+        configPhysics(for: goalPost)
         
         //-------------------------------------//
         let xPosition = frame.width + topRockObstacle.frame.width
@@ -284,9 +279,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
-//        configPhysics(for: topRockObstacle)
-//        configPhysics(for: bottomRockObstacle)
-//        configPhysics(for: goalPost)
         addChildren(topRockObstacle, bottomRockObstacle, goalPost)
 
         //-------------------------------------//
