@@ -5,11 +5,6 @@
 import SpriteKit
 import GameplayKit
 
-protocol PhysicsType
-{
-    
-}
-
 class GameScene: SKScene, SKPhysicsContactDelegate
 {
     var player: SKSpriteNode!
@@ -53,9 +48,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configPhysics(for node: SKSpriteNode)
     {
-//        guard let nodeTexture = node.texture else { return }
-        
         switch node.name {
+            
         case NameKeys.player:
             print("player switch reached")
             //creates pixel-perfect physics
@@ -63,41 +57,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             //tells us when the player collides w anything
             //wasteful in some games but  here the player dies if they touch anything so it's okay
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
-            //isDynamic makes the plae respond to physics
+            //isDynamic makes the plane respond to physics
             //true = default but including it so we can change it later
             node.physicsBody?.isDynamic = true
             //makes the plane bounce off nothing
 //            node.physicsBody?.collisionBitMask = 0
+            
         case NameKeys.ground:
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 0
+            
         case NameKeys.rock:
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 2
+            
         case NameKeys.goalPost:
             node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
             node.physicsBody?.isDynamic = false
+            
         default:
             return
         }
     }
-    
-//    func configPlayerPhysics(for player: SKSpriteNode)
-//    {
-//        guard let playerTexture = player.texture else { return }
-//        //creates pixel-perfect physics
-//        player.physicsBody = SKPhysicsBody(texture: playerTexture, size: playerTexture.size())
-//        //tells us when the player collides w anything
-//        //wasteful in some games but  here the player dies if they touch anything so it's okay
-//        player.physicsBody!.contactTestBitMask = player.physicsBody!.collisionBitMask
-//        //isDynamic makes the plae respond to physics
-//        //true = default but including it so we can change it later
-//        player.physicsBody?.isDynamic = true
-//        //makes the plane bounce off nothing
-//        //        player.physicsBody?.collisionBitMask = 0
-//    }
     
     //-------------------------------------//
     // MARK: - ASSET CREATION
@@ -221,16 +204,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         topRockObstacle.zRotation = .pi
         topRockObstacle.xScale = -1.0
         topRockObstacle.zPosition = -20
-//        topRockObstacle.physicsBody = SKPhysicsBody(texture: topRockObstacle.texture!, size: topRockObstacle.texture!.size())
-//        topRockObstacle.physicsBody?.isDynamic = false
         
         let bottomRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
         bottomRockObstacle.name = NameKeys.rock
         configPhysics(for: bottomRockObstacle)
         bottomRockObstacle.xScale = -1.0
         bottomRockObstacle.zPosition = -20
-//        bottomRockObstacle.physicsBody = SKPhysicsBody(texture: bottomRockObstacle.texture!, size: bottomRockObstacle.texture!.size())
-//        bottomRockObstacle.physicsBody?.isDynamic = false
         
         //AKA rockCollision
         let goalPost = SKSpriteNode(
@@ -254,17 +233,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             x: xPosition,
             y: yPosition + topRockObstacle.size.height + rockDistance
         )
-        
-        /**
-         for testing obstacle gen behavior
-         print("------------------------------")
-         print("frame height: \(frame.height)")
-         print("1/3 of frame height: \(frame.height / 3)")
-         print("cgpoint.y = yposition: \(yPosition)")
-         print(" + rock.size.height: \(topObstacleRock.size.height)")
-         print("+ rockDistance: \(rockDistance)")
-         print("so toprocks cgpoint.y = \(topObstacleRock.position.y)")
-         */
         
         bottomRockObstacle.position = CGPoint(
             x: xPosition,
@@ -339,5 +307,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let value = player.physicsBody!.velocity.dy * 0.001
         let rotate = SKAction.rotate(toAngle: value, duration: 0.1)
         player.run(rotate)
+    }
+    
+    
+    func didBegin(_ contact: SKPhysicsContact)
+    {
+        guard let  contactBodyA = contact.bodyA.node else { return }
+        guard let contactBodyB = contact.bodyB.node else { return }
+        
+        if contactBodyA.name == NameKeys.goalPost { }
     }
 }
