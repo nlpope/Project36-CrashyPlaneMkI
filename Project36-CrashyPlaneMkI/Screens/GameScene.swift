@@ -51,7 +51,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         switch node.name {
             
         case NameKeys.player:
-            print("player switch reached")
             //creates pixel-perfect physics
             node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
             //tells us when the player collides w anything
@@ -300,7 +299,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // MARK: - SCORE KEEPING
     
     //-------------------------------------//
-    // MARK: - FRAME UPDATES
+    // MARK: - ASSET CONTACT & DESTRUCTION AND FRAME UPDATES
     
     override func update(_ currentTime: TimeInterval)
     {
