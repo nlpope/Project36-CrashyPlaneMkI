@@ -314,6 +314,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         guard let  contactBodyA = contact.bodyA.node else { return }
         guard let contactBodyB = contact.bodyB.node else { return }
         
-        if contactBodyA.name == NameKeys.goalPost { }
+        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost
+        else { return }
+        
+        if contactBodyA == player {
+            contactBodyB.removeFromParent()
+        } else {
+            contactBodyA.removeFromParent()
+        }
+        
+//        let sound = SKAction
     }
 }
