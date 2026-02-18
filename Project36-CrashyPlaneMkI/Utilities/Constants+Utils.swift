@@ -36,3 +36,10 @@ enum FontKeys
 {
     static let optimaExtraBlack = "optima-ExtraBlack"
 }
+
+enum SoundKeys
+{
+    static let themeMusic = "music.m4a"
+    static let coinWav = "coin.wav"
+    static let explosionWav = "explosion.wav"
+}

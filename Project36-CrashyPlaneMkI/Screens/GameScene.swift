@@ -315,7 +315,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         guard let contactBodyB = contact.bodyB.node else { return }
         
         guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost
-        else { return }
+        else { destroyPlayer(); return }
         
         if contactBodyA == player {
             contactBodyB.removeFromParent()
@@ -323,6 +323,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             contactBodyA.removeFromParent()
         }
         
-//        let sound = SKAction
+        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
+        run(sound)
+        
+        playerScore += 1
+        
+        return
+    }
+    
+    
+    func destroyPlayer()
+    {
+        
     }
 }
