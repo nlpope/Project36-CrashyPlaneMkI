@@ -325,7 +325,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
         run(sound)
-        
         playerScore += 1
         
         return
@@ -334,6 +333,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func destroyPlayer()
     {
+        if let explosion = SKEmitterNode(fileNamed: AnimationKeys.playerExplosion) {
+            explosion.position = player.position
+            addChild(explosion)
+        }
         
+        let sound = SKAction.playSoundFileNamed(
+            SoundKeys.explosionWav,
+            waitForCompletion: false
+        )
+        run(sound)
+        player.removeFromParent()
+        speed = 0
     }
 }

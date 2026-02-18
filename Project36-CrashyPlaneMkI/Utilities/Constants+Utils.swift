@@ -43,3 +43,9 @@ enum SoundKeys
     static let coinWav = "coin.wav"
     static let explosionWav = "explosion.wav"
 }
+
+enum AnimationKeys
+{
+    static let playerExplosion = "PlayerExplosion.sks"
+    static let spark = "spark.png"
+}
