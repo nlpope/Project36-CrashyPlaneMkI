@@ -37,13 +37,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         configMusic()
     }
     
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
-    {
-        player.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 20))
-    }
-    
     //-------------------------------------//
     // MARK: - CONFIGURATION
     
@@ -350,6 +343,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let value = player.physicsBody!.velocity.dy * 0.001
         let rotate = SKAction.rotate(toAngle: value, duration: 0.1)
         player.run(rotate)
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+        switch gameState {
+            
+        case .showingLogo:
+            gameState = .playing
+            let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+            let wait = SKAction.wait(forDuration: 0.5)
+            let remove = SKAction.removeFromParent()
+            let activatePlayer = SKAction.run { [unowned self] in
+                self.player.physicsBody?.isDynamic = true
+                self.startRocks()
+            }
+            
+            let sequence = SKAction.sequence([fadeOut, wait, activatePlayer, remove])
+            logoScreen.run(sequence)
+            
+        case .playing:
+            player.physicsBody?.velocity = CGVector(
+                dx: 0,
+                dy: 0
+            )
+            player.physicsBody?.applyImpulse(CGVector(
+                dx: 0,
+                dy: 20
+            ))
+            
+        case .dead:
+            break
+        }
     }
     
     
