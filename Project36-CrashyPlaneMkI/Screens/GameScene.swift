@@ -5,9 +5,21 @@
 import SpriteKit
 import GameplayKit
 
+enum GameState
+{
+    case showingLogo
+    case playing
+    case dead
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate
 {
+    var logoScreen: SKSpriteNode!
+    var gameOverScreen: SKSpriteNode!
+    var gameState = GameState.showingLogo
+    
     var player: SKSpriteNode!
+    var backgroundMusic: SKAudioNode!
     var scoreBoard: SKLabelNode!
     var playerScore = 0 {
         didSet { scoreBoard.text = "SCORE: \(playerScore)" }
@@ -15,13 +27,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     override func didMove(to view: SKView)
     {
-        createPlayer()
-        createSky()
-        createBackground()
-        createGround()
-        createScoreBoard()
+        configLogos()
+        configPlayer()
+        configSky()
+        configBackground()
+        configGround()
+        configScoreBoard()
         configPhysicsWorld()
-        startRocks()
+        configMusic()
     }
     
     
@@ -33,6 +46,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     //-------------------------------------//
     // MARK: - CONFIGURATION
+    
+    func configLogos()
+    {
+        logoScreen = SKSpriteNode(imageNamed: TextureKeys.logo)
+        logoScreen.position = CGPoint(
+            x: frame.midX,
+            y: frame.midY
+        )
+        addChild(logoScreen)
+        
+        gameOverScreen = SKSpriteNode(imageNamed: TextureKeys.gameOver)
+        gameOverScreen.position = CGPoint(
+            x: frame.midX,
+            y: frame.midY
+        )
+        gameOverScreen.alpha = 0
+        addChild(gameOverScreen)
+    }
+    
     
     func configPhysicsWorld()
     {
@@ -52,13 +84,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             
         case NameKeys.player:
             //creates pixel-perfect physics
-            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
+            node.physicsBody = SKPhysicsBody(
+                texture: node.texture!,
+                size: node.texture!.size()
+            )
             //tells us when the player collides w anything
             //wasteful in some games but  here the player dies if they touch anything so it's okay
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
             //isDynamic makes the plane respond to physics
             //true = default but including it so we can change it later
-            node.physicsBody?.isDynamic = true
+            node.physicsBody?.isDynamic = false
             //makes the plane bounce off nothing
 //            node.physicsBody?.collisionBitMask = 0
             
@@ -81,10 +116,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
     }
     
-    //-------------------------------------//
-    // MARK: - ASSET CREATION
     
-    func createPlayer()
+    func configMusic()
+    {
+        //turn silent mode off for music to work
+        //auto loops + non-incidental (.wav) case
+        if let musicURL = Bundle.main.url(
+            forResource: "music",
+            withExtension: "m4a"
+        ) {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
+    }
+    
+    
+    func configPlayer()
     {
         let heliFrame1Texture = SKTexture(imageNamed: TextureKeys.heliFrame1)
         player = SKSpriteNode(texture: heliFrame1Texture)
@@ -104,7 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func createSky()
+    func configSky()
     {
         /**
          I think these are spriteNodes for the simple fact that I cant create a texture out of thin air specifying only a color. I think the sky could be swapped for a texture though since it's not needing to be manipulated (? i was wrong, background ended up being a node anyways)
@@ -136,7 +183,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func createBackground()
+    func configBackground()
     {
         let backgroundTexture = SKTexture(imageNamed: TextureKeys.background)
         
@@ -161,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func createGround()
+    func configGround()
     {
         let groundTexture = SKTexture(imageNamed: TextureKeys.ground)
         
@@ -266,7 +313,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func createScoreBoard()
+    func configScoreBoard()
     {
         scoreBoard = SKLabelNode(fontNamed: FontKeys.optimaExtraBlack)
         scoreBoard.fontSize = 24
@@ -294,9 +341,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let repeatForever = SKAction.repeatForever(sequence)
         run(repeatForever)
     }
-    
-    //-------------------------------------//
-    // MARK: - SCORE KEEPING
     
     //-------------------------------------//
     // MARK: - ASSET CONTACT & DESTRUCTION AND FRAME UPDATES
@@ -342,6 +386,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             SoundKeys.explosionWav,
             waitForCompletion: false
         )
+        
         run(sound)
         player.removeFromParent()
         speed = 0

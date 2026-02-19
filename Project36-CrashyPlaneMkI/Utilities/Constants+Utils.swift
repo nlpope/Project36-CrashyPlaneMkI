@@ -15,6 +15,9 @@ enum CollisionBitMasks: UInt32
 
 enum TextureKeys
 {
+    static let logo = "logo"
+    static let gameOver = "gameover"
+
     static let heliFrame1 = "heliFrame1"
     static let heliFrame2 = "heliFrame2"
     static let heliFrame3 = "heliFrame3"
@@ -39,7 +42,6 @@ enum FontKeys
 
 enum SoundKeys
 {
-    static let themeMusic = "music.m4a"
     static let coinWav = "coin.wav"
     static let explosionWav = "explosion.wav"
 }
