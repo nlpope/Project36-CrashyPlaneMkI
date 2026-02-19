@@ -414,6 +414,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         )
         
         run(sound)
+        gameOverScreen.alpha = 1
+        gameState = .dead
+        backgroundMusic.run(SKAction.stop())
         player.removeFromParent()
         speed = 0
     }
