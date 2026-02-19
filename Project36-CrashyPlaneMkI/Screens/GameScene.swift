@@ -340,6 +340,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     override func update(_ currentTime: TimeInterval)
     {
+        guard player != nil else { return }
         let value = player.physicsBody!.velocity.dy * 0.001
         let rotate = SKAction.rotate(toAngle: value, duration: 0.1)
         player.run(rotate)
@@ -374,7 +375,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             ))
             
         case .dead:
-            break
+            if let scene = GameScene(fileNamed: NameKeys.gameScene) {
+                scene.scaleMode = .resizeFill
+                let transition = SKTransition.moveIn(
+                    with: SKTransitionDirection.right,
+                    duration: 1
+                )
+                view?.presentScene(scene, transition: transition)
+            }
         }
     }
     

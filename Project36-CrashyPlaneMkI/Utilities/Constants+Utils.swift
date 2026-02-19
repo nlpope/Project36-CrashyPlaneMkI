@@ -33,6 +33,7 @@ enum NameKeys
     static let ground = "ground"
     static let rock = "rock"
     static let goalPost = "goalPost"
+    static let gameScene = "GameScene"
 }
 
 enum FontKeys
