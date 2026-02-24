@@ -350,9 +350,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func destroyPlayer()
     {
-       
+        explosionEmitter?.position = player.position
+        addChild(explosionEmitter)
         
-        if explosionEmitter != nil {
+        if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion) {
             explosionEmitter.position = player.position
             addChild(explosionEmitter)
         }
