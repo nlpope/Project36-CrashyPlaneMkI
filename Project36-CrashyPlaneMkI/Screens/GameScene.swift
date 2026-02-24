@@ -25,6 +25,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         didSet { scoreBoard.text = "SCORE: \(playerScore)" }
     }
     
+    let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
+    var rockPhysics: SKPhysicsBody!
+    
     override func didMove(to view: SKView)
     {
         configLogos()
@@ -252,7 +255,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         //AKA rockCollision
         let goalPost = SKSpriteNode(
-            color: UIColor.red,
+            color: UIColor.clear,
             size: CGSize(width: 32, height: frame.height)
         )
         
@@ -408,6 +411,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         return
     }
     
+    //-------------------------------------//
+    // MARK: - ASSET DESTRUCTION
     
     func destroyPlayer()
     {
