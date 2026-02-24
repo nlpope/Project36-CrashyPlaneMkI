@@ -26,7 +26,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
-    var rockPhysics: SKPhysicsBody!
+    var rockPhysicsBody: SKPhysicsBody!
+    let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion)
     
     override func didMove(to view: SKView)
     {
@@ -99,7 +100,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 //            node.physicsBody?.collisionBitMask = 0
             
         case NameKeys.rock:
-            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
+            if rockPhysicsBody == nil {
+                rockPhysicsBody = SKPhysicsBody(
+                    texture: rockTexture,
+                    size: rockTexture.size()
+                )
+            }
+            node.physicsBody = rockPhysicsBody.copy() as? SKPhysicsBody
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 2
             
@@ -229,7 +236,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             ground.run(moveForever)
         }
     }
+
     
+    func configScoreBoard()
+    {
+        scoreBoard = SKLabelNode(fontNamed: FontKeys.optimaExtraBlack)
+        scoreBoard.fontSize = 24
+        scoreBoard.text = "SCORE: 0"
+        scoreBoard.fontColor = UIColor.black
+        scoreBoard.position = CGPoint(
+            x: frame.maxX - 70,
+            y: frame.maxY - 60
+        )
+        
+        addChild(scoreBoard)
+    }
+    
+    //-------------------------------------//
+    // MARK: - ASSET CREATION
     
     func createRockObstacles()
     {
@@ -309,23 +333,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func configScoreBoard()
-    {
-        scoreBoard = SKLabelNode(fontNamed: FontKeys.optimaExtraBlack)
-        scoreBoard.fontSize = 24
-        scoreBoard.text = "SCORE: 0"
-        scoreBoard.fontColor = UIColor.black
-        scoreBoard.position = CGPoint(
-            x: frame.maxX - 70,
-            y: frame.maxY - 60
-        )
-        
-        addChild(scoreBoard)
-    }
-    
-    //-------------------------------------//
-    // MARK: - INITIALIZATION
-    
     func startRocks()
     {
         let create = SKAction.run { [unowned self] in
@@ -336,6 +343,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let sequence = SKAction.sequence([create, wait])
         let repeatForever = SKAction.repeatForever(sequence)
         run(repeatForever)
+    }
+    
+    //-------------------------------------//
+    // MARK: - ASSET DESTRUCTION
+    
+    func destroyPlayer()
+    {
+       
+        
+        if explosionEmitter != nil {
+            explosionEmitter.position = player.position
+            addChild(explosionEmitter)
+        }
+        
+        let sound = SKAction.playSoundFileNamed(
+            SoundKeys.explosionWav,
+            waitForCompletion: false
+        )
+        
+        run(sound)
+        gameOverScreen.alpha = 1
+        gameState = .dead
+        backgroundMusic.run(SKAction.stop())
+        player.removeFromParent()
+        speed = 0
     }
     
     //-------------------------------------//
@@ -409,28 +441,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         playerScore += 1
         
         return
-    }
-    
-    //-------------------------------------//
-    // MARK: - ASSET DESTRUCTION
-    
-    func destroyPlayer()
-    {
-        if let explosion = SKEmitterNode(fileNamed: AnimationKeys.playerExplosion) {
-            explosion.position = player.position
-            addChild(explosion)
-        }
-        
-        let sound = SKAction.playSoundFileNamed(
-            SoundKeys.explosionWav,
-            waitForCompletion: false
-        )
-        
-        run(sound)
-        gameOverScreen.alpha = 1
-        gameState = .dead
-        backgroundMusic.run(SKAction.stop())
-        player.removeFromParent()
-        speed = 0
     }
 }
