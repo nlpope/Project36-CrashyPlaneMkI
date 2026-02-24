@@ -25,6 +25,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         didSet { scoreBoard.text = "SCORE: \(playerScore)" }
     }
     
+    /**
+     setting up the rockPhysicsBody and explosionEmitter as global props solves for a lag
+     produced when said props are configged @ the time of generation.
+     I don't know why but setting up an SKEmitterNode up top produces an optional
+     who's 'position' prop cannot be equated to the player's for it being a (CGPoint) -> some View as
+     opposed to just a CGPoint
+     */
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
     var rockPhysicsBody: SKPhysicsBody!
     let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion)
@@ -350,8 +357,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func destroyPlayer()
     {
-        explosionEmitter?.position = player.position
-        addChild(explosionEmitter)
+        //below doesn't work for reason stated above,
+        //but leaving definition up top as it still saves the emitter in memory,
+        //solving the lag issue it has if it were generated on the spot
+//        if explosionEmitter != nil {
+//            explosionEmitter.position = player.position
+//            addChild(explosionEmitter)
+//        }
         
         if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion) {
             explosionEmitter.position = player.position
