@@ -34,6 +34,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      */
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
     var rockPhysicsBody: SKPhysicsBody!
+    
+    let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
+    var cactusPhysicsBody: SKPhysicsBody!
+    
     let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion)
     
     override func didMove(to view: SKView)
@@ -116,6 +120,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             node.physicsBody = rockPhysicsBody.copy() as? SKPhysicsBody
             node.physicsBody?.isDynamic = false
 //            node.physicsBody?.collisionBitMask = 2
+            
+        case NameKeys.cactus:
+            if cactusPhysicsBody == nil {
+                cactusPhysicsBody = SKPhysicsBody(
+                    texture: cactusTexture,
+                    size: cactusTexture.size()
+                )
+            }
+            node.physicsBody = cactusPhysicsBody.copy() as? SKPhysicsBody
+            node.physicsBody?.isDynamic = false
             
         case NameKeys.goalPost:
             node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
@@ -262,27 +276,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     //-------------------------------------//
     // MARK: - ASSET CREATION
     
-    func createRockObstacles()
+    func createObstacles()
     {
-        let obstacleRockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
+        let randomInt = Int.random(in: 0...5)
+        let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
+        let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
+        let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
         
         //-------------------------------------//
-        let topRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        topRockObstacle.name = "rock"
+        let topObstacle = SKSpriteNode(texture: selectedTexture)
+        topObstacle.name = selectedTexture == cactusTexture ? "cactus" : "rock"
         /**
          configging the physics here, before all the below manipulation
          keeps the pixel perfect contact rather than a distorted one that's too far or close to the texture
          */
-        configPhysics(for: topRockObstacle)
-        topRockObstacle.zRotation = .pi
-        topRockObstacle.xScale = -1.0
-        topRockObstacle.zPosition = -20
+        configPhysics(for: topObstacle)
+        topObstacle.zRotation = .pi
+        topObstacle.xScale = -1.0
+        topObstacle.zPosition = -20
         
-        let bottomRockObstacle = SKSpriteNode(texture: obstacleRockTexture)
-        bottomRockObstacle.name = NameKeys.rock
-        configPhysics(for: bottomRockObstacle)
-        bottomRockObstacle.xScale = -1.0
-        bottomRockObstacle.zPosition = -20
+        let bottomObstacle = SKSpriteNode(texture: selectedTexture)
+        bottomObstacle.name = selectedTexture == cactusTexture ? "cactus" : "rock"
+        configPhysics(for: bottomObstacle)
+        bottomObstacle.xScale = -1.0
+        bottomObstacle.zPosition = -20
         
         //AKA rockCollision
         let goalPost = SKSpriteNode(
@@ -294,7 +311,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         configPhysics(for: goalPost)
         
         //-------------------------------------//
-        let xPosition = frame.width + topRockObstacle.frame.width
+        let xPosition = frame.width + topObstacle.frame.width
         let maxY = CGFloat(frame.height / 3)
         //yPosition determines where safe gaps in rocks should be
         //setting low range to be 110 as anything below that value
@@ -302,12 +319,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let yPosition = CGFloat.random(in: 110...maxY)
         let rockDistance: CGFloat = 70
         
-        topRockObstacle.position = CGPoint(
+        topObstacle.position = CGPoint(
             x: xPosition,
-            y: yPosition + topRockObstacle.size.height + rockDistance
+            y: yPosition + topObstacle.size.height + rockDistance
         )
         
-        bottomRockObstacle.position = CGPoint(
+        bottomObstacle.position = CGPoint(
             x: xPosition,
             y: yPosition - rockDistance
         )
@@ -317,10 +334,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
-        addChildren(topRockObstacle, bottomRockObstacle, goalPost)
+        addChildren(topObstacle, bottomObstacle, goalPost)
 
         //-------------------------------------//
-        let endPosition = frame.width + (topRockObstacle.frame.width * 2)
+        let endPosition = frame.width + (topObstacle.frame.width * 2)
         
         let moveAction = SKAction.moveBy(
             x: -endPosition,
@@ -334,8 +351,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         ])
         
         //-------------------------------------//
-        topRockObstacle.run(moveSequence)
-        bottomRockObstacle.run(moveSequence)
+        topObstacle.run(moveSequence)
+        bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
     }
     
@@ -343,7 +360,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     func startRocks()
     {
         let create = SKAction.run { [unowned self] in
-            self.createRockObstacles()
+            self.createObstacles()
         }
         
         let wait = SKAction.wait(forDuration:2)

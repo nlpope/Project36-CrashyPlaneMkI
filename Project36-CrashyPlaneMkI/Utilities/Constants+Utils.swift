@@ -25,6 +25,7 @@ enum TextureKeys
     static let background = "background"
     static let ground = "ground"
     static let rockObstacle = "rock"
+    static let cactusObstacle = "cactus"
 }
 
 enum NameKeys
@@ -32,6 +33,7 @@ enum NameKeys
     static let player = "player"
     static let ground = "ground"
     static let rock = "rock"
+    static let cactus = "cactus"
     static let goalPost = "goalPost"
     static let gameScene = "GameScene"
 }
