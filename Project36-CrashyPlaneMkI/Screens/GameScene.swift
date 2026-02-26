@@ -25,7 +25,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var playerScore = 0 {
         didSet {
             scoreBoard.text = "SCORE: \(playerScore)"
-            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
+            #warning("change to % 10")
+            if playerScore % 2 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
             print("gravity = \(gravity)")
         }
     }
