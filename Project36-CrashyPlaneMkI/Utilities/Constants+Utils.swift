@@ -1,8 +1,6 @@
 //  File: Constants+Utils.swift
 //  Project: Project36-CrashyPlaneMkI
-//  Created by: Noah Pope on 2/3/26.
-
-import Foundation
+//  Created by: Noah Pope on 2/3/26import Foundation
 
 enum CollisionBitMasks: UInt32
 {

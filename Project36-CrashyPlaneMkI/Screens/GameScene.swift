@@ -22,7 +22,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var backgroundMusic: SKAudioNode!
     var scoreBoard: SKLabelNode!
     var playerScore = 0 {
-        didSet { scoreBoard.text = "SCORE: \(playerScore)" }
+        didSet {
+            scoreBoard.text = "SCORE: \(playerScore)"
+            //every 10 pts gravity gets higher
+        }
     }
     
     /**
@@ -48,7 +51,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         configBackground()
         configGround()
         configScoreBoard()
-        configPhysicsWorld()
+        configPhysicsWorld(dy: -5)
         configMusic()
     }
     
@@ -74,10 +77,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func configPhysicsWorld()
+    func configPhysicsWorld(dy: Double)
     {
         physicsWorld.contactDelegate = self
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -5.0)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: dy)
+        //-5
     }
     
     /**
