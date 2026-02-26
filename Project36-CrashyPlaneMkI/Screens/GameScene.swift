@@ -21,10 +21,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var player: SKSpriteNode!
     var backgroundMusic: SKAudioNode!
     var scoreBoard: SKLabelNode!
+    var gravity = -5.0
     var playerScore = 0 {
         didSet {
             scoreBoard.text = "SCORE: \(playerScore)"
-            //every 10 pts gravity gets higher
+            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
+            print("gravity = \(gravity)")
         }
     }
     
