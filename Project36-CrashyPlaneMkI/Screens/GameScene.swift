@@ -386,6 +386,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
+        let ladybugPoint = CGPoint(
+            x: xPosition,
+            y: frame.midY + CGFloat(Int.random(in: 20...50))
+        )
+        
+        configLadybug(at: ladybugPoint)
+        
+//        if Int.random(in: 1...2) == 1 {
+//            
+//        }
+        
         addChildren(topObstacle, bottomObstacle, goalPost)
 
         //-------------------------------------//
@@ -410,7 +421,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         topObstacle.run(moveSequence)
         bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
-        
+                
         if selectedTexture == cactusTexture {
             let scaleAction = SKAction.scale(by: 1.3, duration: 4.0)
             topObstacle.run(scaleAction)
@@ -421,13 +432,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configLadybug(at point: CGPoint)
     {
-        //set up randomint outside of here then triger this on ints occurrences
         let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
         ladybug = SKSpriteNode(texture: ladybugTexture)
         ladybug.name = NameKeys.ladybug
         configPhysics(for: ladybug)
         ladybug.zPosition = 10
         ladybug.position = point
+        ladybug.setScale(0.2)
         
         addChild(ladybug)
         
@@ -438,6 +449,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let runForever = SKAction.repeatForever(animation)
         
         ladybug.run(runForever)
+        
+        #warning("moving way too fast with the wonky end position. + find a way to pass through it like you pass through goalpost - bug keeps bumping me")
+        let endPosition = frame.width + 1000
+        
+        let moveAction = SKAction.moveBy(
+            x: -endPosition,
+            y: 0,
+            duration: 2.2
+        )
+        
+        let moveSequence = SKAction.sequence([
+            moveAction,
+            SKAction.removeFromParent()
+        ])
+        
+        ladybug.run(moveSequence)
     }
     
     
@@ -482,6 +509,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         backgroundMusic.run(SKAction.stop())
         player.removeFromParent()
         speed = 0
+    }
+    
+    
+    func consume(_ node: SKNode)
+    {
+        if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.ladybugConsumption) {
+            coinEmitter.position = node.position
+            addChild(coinEmitter)
+        }
+        node.removeFromParent()
+        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
+        run(sound)
+        playerScore += 3
     }
     
     //-------------------------------------//
@@ -541,12 +581,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         guard let  contactBodyA = contact.bodyA.node else { return }
         guard let contactBodyB = contact.bodyB.node else { return }
         
-        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost
+        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
         else { destroyPlayer(); return }
         
         if contactBodyA == player {
+            if contactBodyB.name == NameKeys.ladybug { consume(ladybug);  return }
             contactBodyB.removeFromParent()
         } else {
+            if contactBodyA.name == NameKeys.ladybug { consume(ladybug); return }
             contactBodyA.removeFromParent()
         }
         

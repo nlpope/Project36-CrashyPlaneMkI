@@ -54,5 +54,5 @@ enum SoundKeys
 enum EmitterKeys
 {
     static let playerExplosion = "PlayerExplosion.sks"
-    static let spark = "spark.png"
+    static let ladybugConsumption = "ladybugConsumption.sks"
 }

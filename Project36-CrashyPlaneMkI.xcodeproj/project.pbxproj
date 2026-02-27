@@ -22,6 +22,7 @@
 		400A9C1A2F329001003FE560 /* coin.wav in Resources */ = {isa = PBXBuildFile; fileRef = 400A9BF02F329001003FE560 /* coin.wav */; };
 		400A9C202F32A429003FE560 /* Constants+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400A9C1F2F32A429003FE560 /* Constants+Utils.swift */; };
 		400A9C352F33F3C1003FE560 /* SKScene+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400A9C342F33F3C0003FE560 /* SKScene+Ext.swift */; };
+		40CB09D52F524E0600C36084 /* ladybugConsumption.sks in Resources */ = {isa = PBXBuildFile; fileRef = 40CB09D42F524E0600C36084 /* ladybugConsumption.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		400A9C062F329001003FE560 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		400A9C1F2F32A429003FE560 /* Constants+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+Utils.swift"; sourceTree = "<group>"; };
 		400A9C342F33F3C0003FE560 /* SKScene+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKScene+Ext.swift"; sourceTree = "<group>"; };
+		40CB09D42F524E0600C36084 /* ladybugConsumption.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ladybugConsumption.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -170,6 +172,7 @@
 			children = (
 				400A9BDF2F328F55003FE560 /* GameScene.sks */,
 				400A9C042F329001003FE560 /* PlayerExplosion.sks */,
+				40CB09D42F524E0600C36084 /* ladybugConsumption.sks */,
 			);
 			path = Sks;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 			files = (
 				400A9C0A2F329001003FE560 /* README.txt in Resources */,
 				400A9C0D2F329001003FE560 /* spark.png in Resources */,
+				40CB09D52F524E0600C36084 /* ladybugConsumption.sks in Resources */,
 				400A9C122F329001003FE560 /* music.m4a in Resources */,
 				400A9C152F329001003FE560 /* PlayerExplosion.sks in Resources */,
 				400A9C172F329001003FE560 /* explosion.wav in Resources */,
