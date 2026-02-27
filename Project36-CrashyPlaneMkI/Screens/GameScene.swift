@@ -14,6 +14,18 @@ enum GameState
 
 class GameScene: SKScene, SKPhysicsContactDelegate
 {
+    //-------------------------------------//
+    // MARK: - PROPERTIES
+    /**
+     setting up the rockPhysicsBody and explosionEmitter as global props solves for a lag
+     produced when said props are configged @ the time of generation.
+     -------------------------------------
+     I don't know why, but setting up an SKEmitterNode up top produces an optional
+     who's 'position' prop cannot be equated to the player's for it being a (CGPoint) -> some View as
+     opposed to just a CGPoint
+     -------------------------------------
+     */
+    
     var logoScreen: SKSpriteNode!
     var gameOverScreen: SKSpriteNode!
     var gameState = GameState.showingLogo
@@ -25,18 +37,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var playerScore = 0 {
         didSet {
             scoreBoard.text = "SCORE: \(playerScore)"
-            #warning("change to % 10")
-            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
+            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity); print("grav++") }
         }
     }
     
-    /**
-     setting up the rockPhysicsBody and explosionEmitter as global props solves for a lag
-     produced when said props are configged @ the time of generation.
-     I don't know why but setting up an SKEmitterNode up top produces an optional
-     who's 'position' prop cannot be equated to the player's for it being a (CGPoint) -> some View as
-     opposed to just a CGPoint
-     */
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
     var rockPhysicsBody: SKPhysicsBody!
     
@@ -58,7 +62,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     //-------------------------------------//
-    // MARK: - CONFIGURATION
+    // MARK: - WORLD PHYSICS CONFIGURATION
+    /**
+     the call to config physics for player comes after addChild
+     and the call for the same on the ground is called before addChild
+     what's the difference?
+     */
     
     func configLogos()
     {
@@ -83,13 +92,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0.0, dy: dy)
-        //-5
     }
     
+    //-------------------------------------//
+    // MARK: - NODE PHYSICS CONFIGURATION
     /**
-     the call to config physics for player comes after addChild
-     and the call for the ssame on the ground is called before addChild
-     what's the difference?
+     node.physicsBody  = creates pixel-perfect physics
+     node.physicsBody.contactTestBitMask = tells us when the player collides w anything
+     it's wasteful in some games but  here the player dies if they touch anything so it's okay
+     -------------------------------------
+     .isDynamic = makes the plane respond to physics
+     default is true but set to false for the title screen needing player to be static til touches begin
      */
     
     func configPhysics(for node: SKSpriteNode)
@@ -97,16 +110,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         switch node.name {
             
         case NameKeys.player:
-            //creates pixel-perfect physics
             node.physicsBody = SKPhysicsBody(
                 texture: node.texture!,
                 size: node.texture!.size()
             )
-            //tells us when the player collides w anything
-            //wasteful in some games but  here the player dies if they touch anything so it's okay
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
-            //isDynamic makes the plane respond to physics
-            //true = default but including it so we can change it later
             node.physicsBody?.isDynamic = false
             //makes the plane bounce off nothing
 //            node.physicsBody?.collisionBitMask = 0
@@ -146,11 +154,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
     }
     
+    //-------------------------------------//
+    // MARK: - GENERAL CONFIGURATION
+    /**
+     turn silent mode off for music to work
+     SKAudioNode auto loops + non-incidental (.wav) cases
+     */
     
     func configMusic()
     {
-        //turn silent mode off for music to work
-        //auto loops + non-incidental (.wav) case
         if let musicURL = Bundle.main.url(
             forResource: "music",
             withExtension: "m4a"
@@ -183,9 +195,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configSky()
     {
-        /**
-         I think these are spriteNodes for the simple fact that I cant create a texture out of thin air specifying only a color. I think the sky could be swapped for a texture though since it's not needing to be manipulated (? i was wrong, background ended up being a node anyways)
-         */
         let topSky = SKSpriteNode(color: UIColor(hue: 0.55,
                                                  saturation: 0.14,
                                                  brightness: 0.97,
@@ -284,19 +293,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func createObstacles()
     {
+        //-------------------------------------//
+        // MARK: - OBSTACLE TEXTURING
+        
         let randomInt = Int.random(in: 0...5)
         let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
         let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
-//        let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
-        let selectedTexture = randomInt == 3 ? cactusTexture : cactusTexture
+        let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
         
         //-------------------------------------//
-        let topObstacle = SKSpriteNode(texture: selectedTexture)
-        topObstacle.name = selectedTexture == cactusTexture ? "cactus" : "rock"
+        // MARK: - OBSTACLE NAMING, SCALING, AND PHYSICS CONFIGURATION
         /**
-         configging the physics here, before all the below manipulation
+         configging physics just before rotation/scaling/and position manipulation
          keeps the pixel perfect contact rather than a distorted one that's too far or close to the texture
          */
+        
+        let topObstacle = SKSpriteNode(texture: selectedTexture)
+        topObstacle.name = selectedTexture == cactusTexture ? "cactus" : "rock"
         configPhysics(for: topObstacle)
         topObstacle.zRotation = .pi
         topObstacle.xScale = -1.0
@@ -311,8 +324,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         if selectedTexture == cactusTexture {
             topObstacle.setScale(1.5)
             bottomObstacle.setScale(1.5)
-            topObstacle.yScale = 3.0
-            bottomObstacle.yScale = 3.0
+            topObstacle.yScale = 3.5
+            bottomObstacle.yScale = 3.5
         }
         
         let goalPost = SKSpriteNode(
@@ -324,15 +337,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         configPhysics(for: goalPost)
         
         //-------------------------------------//
-        // MARK: - OBSTACLE POSITIONING
+        // MARK: - OBSTACLE POSITIONING & POPULATION
+        /**
+         obstacleSafeGap determines where safe gaps in rocks should be setting low range to be 110
+         as anything below that value e.g. -50 results in my top rock floating off the top view
+         -------------------------------------
+         also, giving safeGap diff values for cacti since im playing w the scale later on
+         */
         
         let xPosition = frame.width + topObstacle.frame.width
         let maxY = CGFloat(frame.height / 3)
-        //obstacleSafeGap determines where safe gaps in rocks should be
-        //setting low range to be 110 as anything below that value
-        //e.g. -50 results in my top rock floating off the top view
+        
         let yPosition = CGFloat.random(in: 110...maxY)
-        let obstacleSafeGap: CGFloat = 70
+        let obstacleSafeGap: CGFloat = selectedTexture == cactusTexture ? 140 : 70
         
         topObstacle.position = CGPoint(
             x: xPosition,
@@ -352,6 +369,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         addChildren(topObstacle, bottomObstacle, goalPost)
 
         //-------------------------------------//
+        // MARK: - X AXIS MOTION
+        
         let endPosition = frame.width + (topObstacle.frame.width * 2)
         
         let moveAction = SKAction.moveBy(
@@ -372,7 +391,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
         
-        let scaleAction = SKAction.scale(by: 1.2, duration: 3.0)
+        let scaleAction = SKAction.scale(by: 1.3, duration: 4.0)
         topObstacle.run(scaleAction)
         bottomObstacle.run(scaleAction)
     }
