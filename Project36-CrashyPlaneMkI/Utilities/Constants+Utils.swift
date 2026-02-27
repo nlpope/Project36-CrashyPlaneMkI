@@ -24,11 +24,15 @@ enum TextureKeys
     static let ground = "ground"
     static let rockObstacle = "rock"
     static let cactusObstacle = "cactus"
+    
+    static let ladybug = "ladybug"
+    static let ladybugFly = "ladybugFly"
 }
 
 enum NameKeys
 {
     static let player = "player"
+    static let ladybug = "ladybug"
     static let ground = "ground"
     static let rock = "rock"
     static let cactus = "cactus"

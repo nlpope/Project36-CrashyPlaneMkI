@@ -20,9 +20,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      setting up the rockPhysicsBody and explosionEmitter as global props solves for a lag
      produced when said props are configged @ the time of generation.
      -------------------------------------
-     I don't know why, but setting up an SKEmitterNode up top produces an optional
+     I don't know why, but setting up an SKEmitterNode as global prop produces an optional
      who's 'position' prop cannot be equated to the player's for it being a (CGPoint) -> some View as
-     opposed to just a CGPoint
+     opposed to just a CGPoint - it crashes the game
      -------------------------------------
      */
     
@@ -31,14 +31,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var gameState = GameState.showingLogo
     
     var player: SKSpriteNode!
+    var ladybug: SKSpriteNode!
     var backgroundMusic: SKAudioNode!
     var scoreBoard: SKLabelNode!
     var gravity = -5.0
     var playerScore = 0 {
-        didSet {
-            scoreBoard.text = "SCORE: \(playerScore)"
-            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity); print("grav++") }
-        }
+        didSet { updateScoreBoard() }
     }
     
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
@@ -90,7 +88,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configPhysicsWorld(dy: Double)
     {
-        physicsWorld.contactDelegate = self
+        if physicsWorld.contactDelegate == nil { physicsWorld.contactDelegate = self }
         physicsWorld.gravity = CGVector(dx: 0.0, dy: dy)
     }
     
@@ -100,6 +98,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      node.physicsBody  = creates pixel-perfect physics
      node.physicsBody.contactTestBitMask = tells us when the player collides w anything
      it's wasteful in some games but  here the player dies if they touch anything so it's okay
+     -------------------------------------
+     why aren't collisionBitMasks being used like in ExplodingMonkeys
      -------------------------------------
      .isDynamic = makes the plane respond to physics
      default is true but set to false for the title screen needing player to be static til touches begin
@@ -116,13 +116,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             )
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
             node.physicsBody?.isDynamic = false
-            //makes the plane bounce off nothing
-//            node.physicsBody?.collisionBitMask = 0
+            
+        case NameKeys.ladybug:
+            node.physicsBody = SKPhysicsBody(
+                texture: node.texture!,
+                size: node.texture!.size()
+            )
+            node.physicsBody?.isDynamic = false
             
         case NameKeys.ground:
-            node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.texture!.size())
+            node.physicsBody = SKPhysicsBody(
+                texture: node.texture!,
+                size: node.texture!.size()
+            )
             node.physicsBody?.isDynamic = false
-//            node.physicsBody?.collisionBitMask = 0
             
         case NameKeys.rock:
             if rockPhysicsBody == nil {
@@ -133,7 +140,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             }
             node.physicsBody = rockPhysicsBody.copy() as? SKPhysicsBody
             node.physicsBody?.isDynamic = false
-//            node.physicsBody?.collisionBitMask = 2
             
         case NameKeys.cactus:
             if cactusPhysicsBody == nil {
@@ -186,7 +192,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         let heliFrame2Texture = SKTexture(imageNamed: TextureKeys.heliFrame2)
         let heliFrame3Texture = SKTexture(imageNamed: TextureKeys.heliFrame3)
-        let animation = SKAction.animate(with: [heliFrame1Texture, heliFrame2Texture, heliFrame3Texture], timePerFrame: 0.01)
+        let animation = SKAction.animate(
+            with: [heliFrame1Texture, heliFrame2Texture, heliFrame3Texture],
+            timePerFrame: 0.01
+        )
         let runForever = SKAction.repeatForever(animation)
         
         player.run(runForever)
@@ -286,6 +295,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         )
         
         addChild(scoreBoard)
+    }
+    
+    
+    func updateScoreBoard()
+    {
+        scoreBoard.text = "SCORE: \(playerScore)"
+        if playerScore % 10 == 0 {
+            gravity -= 2
+            configPhysicsWorld(dy: gravity)
+            print("grav++")
+        }
     }
     
     //-------------------------------------//
@@ -391,9 +411,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
         
-        let scaleAction = SKAction.scale(by: 1.3, duration: 4.0)
-        topObstacle.run(scaleAction)
-        bottomObstacle.run(scaleAction)
+        if selectedTexture == cactusTexture {
+            let scaleAction = SKAction.scale(by: 1.3, duration: 4.0)
+            topObstacle.run(scaleAction)
+            bottomObstacle.run(scaleAction)
+        }
+    }
+    
+    
+    func configLadybug(at point: CGPoint)
+    {
+        //set up randomint outside of here then triger this on ints occurrences
+        let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
+        ladybug = SKSpriteNode(texture: ladybugTexture)
+        ladybug.name = NameKeys.ladybug
+        configPhysics(for: ladybug)
+        ladybug.zPosition = 10
+        ladybug.position = point
+        
+        addChild(ladybug)
+        
+        let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
+        let animation = SKAction.animate(
+            with: [ladybugTexture, ladybugFlyTexture],
+            timePerFrame: 0.01)
+        let runForever = SKAction.repeatForever(animation)
+        
+        ladybug.run(runForever)
     }
     
     
@@ -411,17 +455,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     //-------------------------------------//
     // MARK: - ASSET DESTRUCTION
+    /**
+     the below doesn't work and crashes my game. Why? It's acting as if the emitter was never set as a global prop.
+     if explosionEmitter != nil {
+         explosionEmitter?.position = player.position
+         addChild(explosionEmitter!)
+     }
+     -------------------------------------
+     */
     
     func destroyPlayer()
     {
-        //below doesn't work for reason stated above,
-        //but leaving definition up top as it still saves the emitter in memory,
-        //solving the lag issue it has if it were generated on the spot
-//        if explosionEmitter != nil {
-//            explosionEmitter.position = player.position
-//            addChild(explosionEmitter)
-//        }
-        
         if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion) {
             explosionEmitter.position = player.position
             addChild(explosionEmitter)
