@@ -26,8 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         didSet {
             scoreBoard.text = "SCORE: \(playerScore)"
             #warning("change to % 10")
-            if playerScore % 2 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
-            print("gravity = \(gravity)")
+            if playerScore % 10 == 0 { gravity -= 2; configPhysicsWorld(dy: gravity) }
         }
     }
     
@@ -288,7 +287,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let randomInt = Int.random(in: 0...5)
         let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
         let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
-        let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
+//        let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
+        let selectedTexture = randomInt == 3 ? cactusTexture : cactusTexture
         
         //-------------------------------------//
         let topObstacle = SKSpriteNode(texture: selectedTexture)
@@ -308,7 +308,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         bottomObstacle.xScale = -1.0
         bottomObstacle.zPosition = -20
         
-        //AKA rockCollision
+        if selectedTexture == cactusTexture {
+            topObstacle.setScale(1.5)
+            bottomObstacle.setScale(1.5)
+            topObstacle.yScale = 3.0
+            bottomObstacle.yScale = 3.0
+        }
+        
         let goalPost = SKSpriteNode(
             color: UIColor.clear,
             size: CGSize(width: 32, height: frame.height)
@@ -318,22 +324,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         configPhysics(for: goalPost)
         
         //-------------------------------------//
+        // MARK: - OBSTACLE POSITIONING
+        
         let xPosition = frame.width + topObstacle.frame.width
         let maxY = CGFloat(frame.height / 3)
-        //yPosition determines where safe gaps in rocks should be
+        //obstacleSafeGap determines where safe gaps in rocks should be
         //setting low range to be 110 as anything below that value
         //e.g. -50 results in my top rock floating off the top view
         let yPosition = CGFloat.random(in: 110...maxY)
-        let rockDistance: CGFloat = 70
+        let obstacleSafeGap: CGFloat = 70
         
         topObstacle.position = CGPoint(
             x: xPosition,
-            y: yPosition + topObstacle.size.height + rockDistance
+            y: yPosition + topObstacle.size.height + obstacleSafeGap
         )
         
         bottomObstacle.position = CGPoint(
             x: xPosition,
-            y: yPosition - rockDistance
+            y: yPosition - obstacleSafeGap
         )
         
         goalPost.position = CGPoint(
@@ -358,19 +366,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         ])
         
         //-------------------------------------//
+        // MARK: - OBSTACLE ANIMATIONS
+        
         topObstacle.run(moveSequence)
         bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
+        
+        let scaleAction = SKAction.scale(by: 1.2, duration: 3.0)
+        topObstacle.run(scaleAction)
+        bottomObstacle.run(scaleAction)
     }
     
     
-    func startRocks()
+    func startObstacles()
     {
         let create = SKAction.run { [unowned self] in
             self.createObstacles()
         }
-        
         let wait = SKAction.wait(forDuration:2)
+        
         let sequence = SKAction.sequence([create, wait])
         let repeatForever = SKAction.repeatForever(sequence)
         run(repeatForever)
@@ -430,7 +444,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             let remove = SKAction.removeFromParent()
             let activatePlayer = SKAction.run { [unowned self] in
                 self.player.physicsBody?.isDynamic = true
-                self.startRocks()
+                self.startObstacles()
             }
             
             let sequence = SKAction.sequence([fadeOut, wait, activatePlayer, remove])
