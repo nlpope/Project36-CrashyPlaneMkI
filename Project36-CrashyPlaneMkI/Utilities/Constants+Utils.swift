@@ -39,11 +39,11 @@ enum FontKeys
 enum EmitterKeys
 {
     static let destroyPlayer = "destroyPlayer.sks"
-    static let destroyLadybug = "destroyLadybug.sks"
+    static let consumeLadybug = "consumeLadybug.sks"
 }
 
 enum SoundKeys
 {
     static let coinWav = "coin.wav"
-    static let destroyPlayerWav = "destroyPlayer.wav"
+    static let destroyPlayerWav = "explosion.wav"
 }

@@ -448,18 +448,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         ladybug.position = point
         ladybug.setScale(0.2)
         
-        addChild(ladybug)
-        
         let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
         let animation = SKAction.animate(
             with: [ladybugTexture, ladybugFlyTexture],
             timePerFrame: 0.01)
         let runForever = SKAction.repeatForever(animation)
         
+        addChild(ladybug)
         ladybug.run(runForever)
         
-#warning("moving way too fast with the wonky end position. + find a way to pass through it like you pass through goalpost - bug keeps bumping me")
-        let endPosition = frame.width + 1000
+        let endPosition = frame.width + (ladybugTexture.size().width * 3)
         
         let moveAction = SKAction.moveBy(
             x: -endPosition,
@@ -499,19 +497,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      -------------------------------------
      */
     
+    func consumeAsset(_ node: SKSpriteNode)
+    {
+        let sound = SKAction.playSoundFileNamed(
+            SoundKeys.coinWav,
+            waitForCompletion: false)
+        
+        switch node.name {
+        case NameKeys.goalPost:
+            node.removeFromParent()
+            run(sound)
+            playerScore += 1
+            
+        case NameKeys.ladybug:
+            if let coinEmitter = SKEmitterNode(
+                fileNamed: EmitterKeys.consumeLadybug
+            ) {
+                coinEmitter.position = node.position
+                coinEmitter.numParticlesToEmit = 2
+                addChild(coinEmitter)
+            }
+            node.removeFromParent()
+            run(sound)
+            playerScore += 2
+            
+        default:
+            break
+        }
+    }
+    
+    
     func destroy(_ node: SKSpriteNode)
     {
         switch node.name {
         case NameKeys.player:
+            let sound = SKAction.playSoundFileNamed(
+                SoundKeys.destroyPlayerWav,
+                waitForCompletion: true
+            )
+            
             if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer) {
                 explosionEmitter.position = player.position
                 addChild(explosionEmitter)
             }
-            
-            let sound = SKAction.playSoundFileNamed(
-                SoundKeys.destroyPlayerWav,
-                waitForCompletion: false
-            )
             
             run(sound)
             gameOverScreen.alpha = 1
@@ -520,15 +548,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             player.removeFromParent()
             speed = 0
             
-        case NameKeys.ladybug:
-            if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyLadybug) {
-                coinEmitter.position = node.position
-                addChild(coinEmitter)
-            }
-            node.removeFromParent()
-            let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
-            run(sound)
-            playerScore += 3
+//        case NameKeys.ladybug:
+//            if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.consumeLadybug) {
+//                coinEmitter.position = node.position
+//                addChild(coinEmitter)
+//            }
+//            node.removeFromParent()
+//            let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
+//            run(sound)
+//            playerScore += 3
             
         default:
             break
@@ -586,28 +614,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func consumeAsset(_ node: SKSpriteNode)
-    {
-        let sound = SKAction.playSoundFileNamed(
-            SoundKeys.coinWav,
-            waitForCompletion: false)
-        
-        switch node.name {
-        case NameKeys.goalPost:
-            run(sound)
-            node.removeFromParent()
-            playerScore += 1
-            
-        case NameKeys.ladybug:
-            node.removeFromParent()
-            playerScore += 3
-            
-        default:
-            break
-        }
-    }
-    
-    
     func didBegin(_ contact: SKPhysicsContact)
     {
         guard let  contactBodyA = contact.bodyA.node else { return }
@@ -616,12 +622,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         switch contactBodyA.name {
         case NameKeys.rock:
             destroy(player)
+            
         case NameKeys.cactus:
             destroy(player)
+            
+        case NameKeys.ground:
+            destroy(player)
+            
         case NameKeys.goalPost:
             consumeAsset(contactBodyA as! SKSpriteNode)
+            
         case NameKeys.ladybug:
             consumeAsset(contactBodyA as! SKSpriteNode)
+            
         case NameKeys.player:
             break
             
@@ -636,15 +649,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         case NameKeys.cactus:
             destroy(player)
             
+        case NameKeys.ground:
+            destroy(player)
+            
         case NameKeys.goalPost:
             consumeAsset(contactBodyB as! SKSpriteNode)
-        
+            
         case NameKeys.ladybug:
             consumeAsset(contactBodyB as! SKSpriteNode)
         
         default:
             destroy(player)
-            return
         }
         
 //        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
