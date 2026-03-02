@@ -45,7 +45,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
     var cactusPhysicsBody: SKPhysicsBody!
     
-    let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion)
+    let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
+    let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
+    var ladybugPhysicsBody: SKPhysicsBody!
+    
+    let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer)
     
     override func didMove(to view: SKView)
     {
@@ -108,7 +112,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     func configPhysics(for node: SKSpriteNode)
     {
         switch node.name {
-            
         case NameKeys.player:
             node.physicsBody = SKPhysicsBody(
                 texture: node.texture!,
@@ -118,10 +121,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             node.physicsBody?.isDynamic = false
             
         case NameKeys.ladybug:
-            node.physicsBody = SKPhysicsBody(
-                texture: node.texture!,
-                size: node.texture!.size()
-            )
+            if ladybugPhysicsBody == nil {
+                ladybugPhysicsBody = SKPhysicsBody(
+                    texture: ladybugTexture,
+                    size: ladybugTexture.size()
+                )
+            }
+            node.physicsBody = ladybugPhysicsBody.copy() as? SKPhysicsBody
             node.physicsBody?.isDynamic = false
             
         case NameKeys.ground:
@@ -212,14 +218,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                                                height: frame.height * 0.67)
         )
         
-        let bottomSky = SKSpriteNode(color: UIColor(hue: 0.55,
-                                                    saturation: 0.16,
-                                                    brightness: 0.96,
-                                                    alpha: 1),
-                                     size: CGSize(width: frame.width,
-                                                  height: frame.height * 0.33)
+        let bottomSky = SKSpriteNode(
+            color: UIColor(hue: 0.55,
+                           saturation: 0.16,
+                           brightness: 0.96,
+                           alpha: 1
+                          ),
+            size: CGSize(width: frame.width,
+                         height: frame.height * 0.33
+                        )
         )
-                
+        
         topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
         topSky.position = CGPoint(x: frame.midX, y: frame.height)
@@ -270,7 +279,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i),
                 y: 0
             )
-                        
+            
             addChild(ground)
             
             let moveLeft = SKAction.moveBy(x: -groundTexture.size().width, y: 0, duration: 5)
@@ -281,7 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             ground.run(moveForever)
         }
     }
-
+    
     
     func configScoreBoard()
     {
@@ -393,12 +402,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         configLadybug(at: ladybugPoint)
         
-//        if Int.random(in: 1...2) == 1 {
-//            
-//        }
+        //        if Int.random(in: 1...2) == 1 {
+        //
+        //        }
         
         addChildren(topObstacle, bottomObstacle, goalPost)
-
+        
         //-------------------------------------//
         // MARK: - X AXIS MOTION
         
@@ -421,7 +430,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         topObstacle.run(moveSequence)
         bottomObstacle.run(moveSequence)
         goalPost.run(moveSequence)
-                
+        
         if selectedTexture == cactusTexture {
             let scaleAction = SKAction.scale(by: 1.3, duration: 4.0)
             topObstacle.run(scaleAction)
@@ -450,7 +459,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         ladybug.run(runForever)
         
-        #warning("moving way too fast with the wonky end position. + find a way to pass through it like you pass through goalpost - bug keeps bumping me")
+#warning("moving way too fast with the wonky end position. + find a way to pass through it like you pass through goalpost - bug keeps bumping me")
         let endPosition = frame.width + 1000
         
         let moveAction = SKAction.moveBy(
@@ -485,43 +494,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     /**
      the below doesn't work and crashes my game. Why? It's acting as if the emitter was never set as a global prop.
      if explosionEmitter != nil {
-         explosionEmitter?.position = player.position
-         addChild(explosionEmitter!)
+     explosionEmitter?.position = player.position
+     addChild(explosionEmitter!)
      }
      -------------------------------------
      */
     
-    func destroyPlayer()
+    func destroy(_ node: SKSpriteNode)
     {
-        if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.playerExplosion) {
-            explosionEmitter.position = player.position
-            addChild(explosionEmitter)
+        switch node.name {
+        case NameKeys.player:
+            if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer) {
+                explosionEmitter.position = player.position
+                addChild(explosionEmitter)
+            }
+            
+            let sound = SKAction.playSoundFileNamed(
+                SoundKeys.destroyPlayerWav,
+                waitForCompletion: false
+            )
+            
+            run(sound)
+            gameOverScreen.alpha = 1
+            gameState = .dead
+            backgroundMusic.run(SKAction.stop())
+            player.removeFromParent()
+            speed = 0
+            
+        case NameKeys.ladybug:
+            if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyLadybug) {
+                coinEmitter.position = node.position
+                addChild(coinEmitter)
+            }
+            node.removeFromParent()
+            let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
+            run(sound)
+            playerScore += 3
+            
+        default:
+            break
         }
-        
-        let sound = SKAction.playSoundFileNamed(
-            SoundKeys.explosionWav,
-            waitForCompletion: false
-        )
-        
-        run(sound)
-        gameOverScreen.alpha = 1
-        gameState = .dead
-        backgroundMusic.run(SKAction.stop())
-        player.removeFromParent()
-        speed = 0
-    }
-    
-    
-    func consume(_ node: SKNode)
-    {
-        if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.ladybugConsumption) {
-            coinEmitter.position = node.position
-            addChild(coinEmitter)
-        }
-        node.removeFromParent()
-        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
-        run(sound)
-        playerScore += 3
     }
     
     //-------------------------------------//
@@ -539,7 +551,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         switch gameState {
-            
         case .showingLogo:
             gameState = .playing
             let fadeOut = SKAction.fadeOut(withDuration: 0.5)
@@ -582,13 +593,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         guard let contactBodyB = contact.bodyB.node else { return }
         
         guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
-        else { destroyPlayer(); return }
+        else { destroy(player); return }
         
         if contactBodyA == player {
-            if contactBodyB.name == NameKeys.ladybug { consume(ladybug);  return }
+            if contactBodyB.name == NameKeys.ladybug { destroy(ladybug);  return }
             contactBodyB.removeFromParent()
         } else {
-            if contactBodyA.name == NameKeys.ladybug { consume(ladybug); return }
+            if contactBodyA.name == NameKeys.ladybug { destroy(ladybug); return }
             contactBodyA.removeFromParent()
         }
         

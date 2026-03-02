@@ -45,14 +45,14 @@ enum FontKeys
     static let optimaExtraBlack = "optima-ExtraBlack"
 }
 
+enum EmitterKeys
+{
+    static let destroyPlayer = "destroyPlayer.sks"
+    static let destroyLadybug = "destroyLadybug.sks"
+}
+
 enum SoundKeys
 {
     static let coinWav = "coin.wav"
-    static let explosionWav = "explosion.wav"
-}
-
-enum EmitterKeys
-{
-    static let playerExplosion = "PlayerExplosion.sks"
-    static let ladybugConsumption = "ladybugConsumption.sks"
+    static let destroyPlayerWav = "destroyPlayer.wav"
 }
