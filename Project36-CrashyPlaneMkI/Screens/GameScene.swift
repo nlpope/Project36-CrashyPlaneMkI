@@ -441,7 +441,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func configLadybug(at point: CGPoint)
     {
-        let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
         ladybug = SKSpriteNode(texture: ladybugTexture)
         ladybug.name = NameKeys.ladybug
         configPhysics(for: ladybug)
@@ -537,7 +536,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     //-------------------------------------//
-    // MARK: - ASSET CONTACT & DESTRUCTION AND FRAME UPDATES
+    // MARK: - ASSET CONTACT AND FRAME UPDATES
     
     override func update(_ currentTime: TimeInterval)
     {
@@ -587,25 +586,81 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
+    func consumeAsset(_ node: SKSpriteNode)
+    {
+        let sound = SKAction.playSoundFileNamed(
+            SoundKeys.coinWav,
+            waitForCompletion: false)
+        
+        switch node.name {
+        case NameKeys.goalPost:
+            run(sound)
+            node.removeFromParent()
+            playerScore += 1
+            
+        case NameKeys.ladybug:
+            node.removeFromParent()
+            playerScore += 3
+            
+        default:
+            break
+        }
+    }
+    
+    
     func didBegin(_ contact: SKPhysicsContact)
     {
         guard let  contactBodyA = contact.bodyA.node else { return }
         guard let contactBodyB = contact.bodyB.node else { return }
         
-        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
-        else { destroy(player); return }
-        
-        if contactBodyA == player {
-            if contactBodyB.name == NameKeys.ladybug { destroy(ladybug);  return }
-            contactBodyB.removeFromParent()
-        } else {
-            if contactBodyA.name == NameKeys.ladybug { destroy(ladybug); return }
-            contactBodyA.removeFromParent()
+        switch contactBodyA.name {
+        case NameKeys.rock:
+            destroy(player)
+        case NameKeys.cactus:
+            destroy(player)
+        case NameKeys.goalPost:
+            consumeAsset(contactBodyA as! SKSpriteNode)
+        case NameKeys.ladybug:
+            consumeAsset(contactBodyA as! SKSpriteNode)
+        case NameKeys.player:
+            break
+            
+        default:
+            break
         }
         
-        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
-        run(sound)
-        playerScore += 1
+        switch contactBodyB.name {
+        case NameKeys.rock:
+            destroy(player)
+            
+        case NameKeys.cactus:
+            destroy(player)
+            
+        case NameKeys.goalPost:
+            consumeAsset(contactBodyB as! SKSpriteNode)
+        
+        case NameKeys.ladybug:
+            consumeAsset(contactBodyB as! SKSpriteNode)
+        
+        default:
+            destroy(player)
+            return
+        }
+        
+//        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
+//        else { destroy(player); return }
+        
+//        if contactBodyA == player {
+//            if contactBodyB.name == NameKeys.ladybug { destroy(ladybug);  return }
+//            contactBodyB.removeFromParent()
+//        } else {
+//            if contactBodyA.name == NameKeys.ladybug { destroy(ladybug); return }
+//            contactBodyA.removeFromParent()
+//        }
+        
+//        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
+//        run(sound)
+//        playerScore += 1
         
         return
     }

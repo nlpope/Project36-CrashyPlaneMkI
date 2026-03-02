@@ -2,15 +2,6 @@
 //  Project: Project36-CrashyPlaneMkI
 //  Created by: Noah Pope on 2/3/26import Foundation
 
-enum CollisionBitMasks: UInt32
-{
-    /** raw values for physics body bitmasks should be
-     integers that are double the value of the previous case */
-    case player = 1
-    case rockObstacle = 2
-    case ground = 4
-}
-
 enum TextureKeys
 {
     static let logo = "logo"
