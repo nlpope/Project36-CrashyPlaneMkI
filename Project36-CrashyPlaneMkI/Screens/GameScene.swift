@@ -49,6 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
     var ladybugPhysicsBody: SKPhysicsBody!
     
+    
     let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer)
     
     override func didMove(to view: SKView)
@@ -514,7 +515,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 fileNamed: EmitterKeys.consumeLadybug
             ) {
                 coinEmitter.position = node.position
-                coinEmitter.numParticlesToEmit = 2
+                coinEmitter.numParticlesToEmit = 1
                 addChild(coinEmitter)
             }
             node.removeFromParent()
@@ -533,7 +534,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         case NameKeys.player:
             let sound = SKAction.playSoundFileNamed(
                 SoundKeys.destroyPlayerWav,
-                waitForCompletion: true
+                waitForCompletion: false
             )
             
             if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer) {
@@ -622,18 +623,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         switch contactBodyA.name {
         case NameKeys.rock:
             destroy(player)
+            return
             
         case NameKeys.cactus:
             destroy(player)
+            return
             
         case NameKeys.ground:
             destroy(player)
+            return
             
         case NameKeys.goalPost:
             consumeAsset(contactBodyA as! SKSpriteNode)
+            return
             
         case NameKeys.ladybug:
             consumeAsset(contactBodyA as! SKSpriteNode)
+            return
             
         case NameKeys.player:
             break
@@ -645,21 +651,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         switch contactBodyB.name {
         case NameKeys.rock:
             destroy(player)
+            return
             
         case NameKeys.cactus:
             destroy(player)
+            return
             
         case NameKeys.ground:
             destroy(player)
+            return
             
         case NameKeys.goalPost:
             consumeAsset(contactBodyB as! SKSpriteNode)
+            return
             
         case NameKeys.ladybug:
             consumeAsset(contactBodyB as! SKSpriteNode)
+            return
         
         default:
-            destroy(player)
+            break
         }
         
 //        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
