@@ -492,14 +492,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      addChild(explosionEmitter!)
      }
      
-     removing node from parent doesn't set it to nil; it exists in memory til no more strong references to it exist - so just manually set it to nil to solve for double/triple/etc. contacts
+     removing node from parent doesn't set it to nil if strong ref's exist
+     (i.e you're passing it around methods, which you are);
+     it exists in memory til no more strong references to it exist - so just manually set it to nil to solve for double/triple/etc. contacts
+     it worked for Hudson b/c he was doing it all in one place so no strong ref's were made
      -------------------------------------
      */
     
-    func consumeAsset(_ node: inout SKNode?)
+//    func consumeAsset(_ node: inout SKNode?)
+    func consumeAsset(_ node: inout SKSpriteNode?)
     {
         guard node != nil else { return }
-//        print(node.name)
         
         let sound = SKAction.playSoundFileNamed(
             SoundKeys.coinWav,
@@ -510,22 +513,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         case NameKeys.goalPost:
             print("consuming goal")
             node?.removeFromParent()
+            #warning("nil the node")
             run(sound)
             playerScore += 1
             
             
         case NameKeys.ladybug:
-            print("consuming ladybug")
+            print("consuming ladybug: \(node?.name)")
             node?.removeFromParent()
             node = nil
-//            print("post-removal node name = \(node.name!)")
             if let coinEmitter = SKEmitterNode(
                 fileNamed: EmitterKeys.consumeLadybug
             ) {
-                coinEmitter.position = node!.position
+                coinEmitter.position = player.position
                 coinEmitter.numParticlesToEmit = 1
                 addChild(coinEmitter)
             }
+            
             run(sound)
             playerScore += 2
             
@@ -545,7 +549,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             )
             
             if let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer) {
-                explosionEmitter.position = player.position
+                explosionEmitter.position = node.position
                 addChild(explosionEmitter)
             }
             
@@ -567,6 +571,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      didBegin(contact)'s guard var contactBodyA = contact.bodyA.node else { return }
      gave me issues that didn't allow the 'now mutable' binding (type other than SKNode? possible) to be passed to the
      consumption method (expects SKNode?)
+     so i opted for the long way to guard the raw contact's node
+     then I set those nodes equal to mutable variables able to be passed to inout method as SKNode!
      -------------------------------------
      */
     
@@ -607,8 +613,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             
         case .dead:
             if let scene = GameScene(fileNamed: NameKeys.gameScene) {
-                self.playerScore = 0
-                print("playerscore: \(self.playerScore)")
+//                self.playerScore = 0
+                print("playerscore: \(scene.playerScore)")
                 scene.scaleMode = .resizeFill
                 let transition = SKTransition.moveIn(
                     with: SKTransitionDirection.right,
@@ -622,15 +628,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func didBegin(_ contact: SKPhysicsContact)
     {
-        guard var contactBodyA = contact.bodyA.node as SKNode?
-        else { return }
-        guard var contactBodyB = contact.bodyB.node else { return }
-//        guard contact.bodyA.node != nil else { return }
-//        guard contact.bodyB.node != nil else { return }
-//        var contactBodyA = contact.bodyA.node
-//        var contactBodyB = contact.bodyB.node
+        guard contact.bodyA.node != nil else { return }
+        guard contact.bodyB.node != nil else { return }
+        var contactBodyA = contact.bodyA.node as? SKSpriteNode
+        var contactBodyB = contact.bodyB.node as? SKSpriteNode
         
-        switch contactBodyA.name {
+        switch contactBodyA?.name {
             
         case NameKeys.rock:
             destroy(player)
@@ -659,7 +662,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             break
         }
         
-        switch contactBodyB!.name {
+        switch contactBodyB?.name {
             
         case NameKeys.rock:
             destroy(player)
@@ -678,7 +681,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             return
             
         case NameKeys.ladybug:
+            print("bell labs b4: \(contactBodyB?.name)")
+
             consumeAsset(&contactBodyB)
+            print("bell labs after: \(contactBodyB?.name)")
             return
         
         default:
