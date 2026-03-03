@@ -47,7 +47,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
     let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
-    var ladybugPhysicsBody: SKPhysicsBody!
+//    var ladybugPhysicsBody: SKPhysicsBody!
     
     
     let explosionEmitter = SKEmitterNode(fileNamed: EmitterKeys.destroyPlayer)
@@ -121,13 +121,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             node.physicsBody!.contactTestBitMask = node.physicsBody!.collisionBitMask
             node.physicsBody?.isDynamic = false
             
+        case NameKeys.goalPost:
+            node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
+            node.physicsBody?.isDynamic = false
+            
         case NameKeys.ladybug:
-            if ladybugPhysicsBody == nil {
-                ladybugPhysicsBody = SKPhysicsBody(
-                    texture: ladybugTexture,
-                    size: ladybugTexture.size()
-                )
-            }
+//            if ladybugPhysicsBody == nil {
+//                ladybugPhysicsBody = SKPhysicsBody(
+//                    texture: ladybugTexture,
+//                    size: ladybugTexture.size()
+//                )
+//            }
+            
+//            var ladybugPhysicsBody: SKPhysicsBody!
+            
+            let ladybugPhysicsBody = SKPhysicsBody(
+                texture: ladybugTexture,
+                size: ladybugTexture.size()
+            )
+            
             node.physicsBody = ladybugPhysicsBody.copy() as? SKPhysicsBody
             node.physicsBody?.isDynamic = false
             
@@ -156,10 +168,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 )
             }
             node.physicsBody = cactusPhysicsBody.copy() as? SKPhysicsBody
-            node.physicsBody?.isDynamic = false
-            
-        case NameKeys.goalPost:
-            node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
             node.physicsBody?.isDynamic = false
             
         default:
@@ -519,7 +527,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             
             
         case NameKeys.ladybug:
-            print("consuming ladybug: \(node?.name)")
+            print("consuming ladybug")
             node?.removeFromParent()
             node = nil
             if let coinEmitter = SKEmitterNode(
@@ -625,15 +633,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
     }
     
-    
+    #warning("PROBLEM CHILD - too many contacts per hit")
     func didBegin(_ contact: SKPhysicsContact)
     {
-        guard contact.bodyA.node != nil else { return }
-        guard contact.bodyB.node != nil else { return }
-        var contactBodyA = contact.bodyA.node as? SKSpriteNode
-        var contactBodyB = contact.bodyB.node as? SKSpriteNode
+//        guard contact.bodyA.node != nil else { return }
+//        guard contact.bodyB.node != nil else { return }
+//        var contactBodyA = contact.bodyA.node as? SKSpriteNode
+//        var contactBodyB = contact.bodyB.node as? SKSpriteNode
         
-        switch contactBodyA?.name {
+//        switch contactBodyA?.name {
+        let sound = SKAction.playSoundFileNamed(
+            SoundKeys.coinWav,
+            waitForCompletion: false)
+        
+        switch contact.bodyA.node?.name {
             
         case NameKeys.rock:
             destroy(player)
@@ -648,12 +661,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             return
             
         case NameKeys.goalPost:
-            consumeAsset(&contactBodyA)
-            return
+//            consumeAsset(&contact.bodyA.node)
+            print("consuming goal")
+            contact.bodyA.node?.removeFromParent()
+            #warning("nil the node")
+//            run(sound)
+            playerScore += 1
             
         case NameKeys.ladybug:
-            consumeAsset(&contactBodyA)
-            return
+//            consumeAsset(&contactBodyA)
+            print("consuming ladybug")
+            contact.bodyA.node?.removeFromParent()
+//            contact.bodyA.node? = nil
+            if let coinEmitter = SKEmitterNode(
+                fileNamed: EmitterKeys.consumeLadybug
+            ) {
+                coinEmitter.position = player.position
+                coinEmitter.numParticlesToEmit = 1
+                addChild(coinEmitter)
+            }
+            
+            run(sound)
+            playerScore += 2
+//            guard contact.bodyA.node != nil else { return }
+//            guard contact.bodyB.node != nil else { return }
+            
             
         case NameKeys.player:
             break
@@ -662,7 +694,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             break
         }
         
-        switch contactBodyB?.name {
+        switch contact.bodyB.node?.name {
             
         case NameKeys.rock:
             destroy(player)
@@ -677,20 +709,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             return
             
         case NameKeys.goalPost:
-            consumeAsset(&contactBodyB)
-            return
+//            consumeAsset(&contactBodyB)
+//            guard contactBodyA != nil && contactBodyB != nil else { return }
+            contact.bodyB.node?.removeFromParent()
+            #warning("nil the node")
+//            run(sound)
+            playerScore += 1
+            
             
         case NameKeys.ladybug:
-            print("bell labs b4: \(contactBodyB?.name)")
-
-            consumeAsset(&contactBodyB)
-            print("bell labs after: \(contactBodyB?.name)")
-            return
+//            consumeAsset(&contactBodyB)
+//            guard contactBodyA != nil && contactBodyB != nil else { return }
+            print("consuming ladybug")
+            contact.bodyB.node?.removeFromParent()
+//            contact.bodyA.node? = nil
+            if let coinEmitter = SKEmitterNode(
+                fileNamed: EmitterKeys.consumeLadybug
+            ) {
+                coinEmitter.position = player.position
+                coinEmitter.numParticlesToEmit = 1
+                addChild(coinEmitter)
+            }
+            
+            run(sound)
+            playerScore += 2
+//            guard contact.bodyA.node != nil else { return }
+//            guard contact.bodyB.node != nil else { return }
         
         default:
             break
         }
-        
-        return
+        guard contact.bodyA.node != nil else { return }
+        guard contact.bodyB.node != nil else { return }
+
+
+//        return
     }
 }
