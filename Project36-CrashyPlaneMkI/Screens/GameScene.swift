@@ -491,30 +491,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate
      explosionEmitter?.position = player.position
      addChild(explosionEmitter!)
      }
+     
+     removing node from parent doesn't set it to nil; it exists in memory til no more strong references to it exist - so just manually set it to nil to solve for double/triple/etc. contacts
      -------------------------------------
      */
     
-    func consumeAsset(_ node: SKSpriteNode)
+    func consumeAsset(_ node: inout SKNode?)
     {
+        guard node != nil else { return }
+//        print(node.name)
+        
         let sound = SKAction.playSoundFileNamed(
             SoundKeys.coinWav,
             waitForCompletion: false)
         
-        switch node.name {
+        switch node?.name {
+            
         case NameKeys.goalPost:
-            node.removeFromParent()
+            print("consuming goal")
+            node?.removeFromParent()
             run(sound)
             playerScore += 1
             
+            
         case NameKeys.ladybug:
+            print("consuming ladybug")
+            node?.removeFromParent()
+            node = nil
+//            print("post-removal node name = \(node.name!)")
             if let coinEmitter = SKEmitterNode(
                 fileNamed: EmitterKeys.consumeLadybug
             ) {
-                coinEmitter.position = node.position
+                coinEmitter.position = node!.position
                 coinEmitter.numParticlesToEmit = 1
                 addChild(coinEmitter)
             }
-            node.removeFromParent()
             run(sound)
             playerScore += 2
             
@@ -552,6 +563,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     //-------------------------------------//
     // MARK: - ASSET CONTACT AND FRAME UPDATES
+    /**
+     didBegin(contact)'s guard var contactBodyA = contact.bodyA.node else { return }
+     gave me issues that didn't allow the 'now mutable' binding (type other than SKNode? possible) to be passed to the
+     consumption method (expects SKNode?)
+     -------------------------------------
+     */
     
     override func update(_ currentTime: TimeInterval)
     {
@@ -590,6 +607,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             
         case .dead:
             if let scene = GameScene(fileNamed: NameKeys.gameScene) {
+                self.playerScore = 0
                 print("playerscore: \(self.playerScore)")
                 scene.scaleMode = .resizeFill
                 let transition = SKTransition.moveIn(
@@ -604,10 +622,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     func didBegin(_ contact: SKPhysicsContact)
     {
-        guard let  contactBodyA = contact.bodyA.node else { return }
-        guard let contactBodyB = contact.bodyB.node else { return }
+        guard var contactBodyA = contact.bodyA.node as SKNode?
+        else { return }
+        guard var contactBodyB = contact.bodyB.node else { return }
+//        guard contact.bodyA.node != nil else { return }
+//        guard contact.bodyB.node != nil else { return }
+//        var contactBodyA = contact.bodyA.node
+//        var contactBodyB = contact.bodyB.node
         
         switch contactBodyA.name {
+            
         case NameKeys.rock:
             destroy(player)
             return
@@ -621,11 +645,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             return
             
         case NameKeys.goalPost:
-            consumeAsset(contactBodyA as! SKSpriteNode)
+            consumeAsset(&contactBodyA)
             return
             
         case NameKeys.ladybug:
-            consumeAsset(contactBodyA as! SKSpriteNode)
+            consumeAsset(&contactBodyA)
             return
             
         case NameKeys.player:
@@ -635,7 +659,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             break
         }
         
-        switch contactBodyB.name {
+        switch contactBodyB!.name {
+            
         case NameKeys.rock:
             destroy(player)
             return
@@ -649,11 +674,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             return
             
         case NameKeys.goalPost:
-            consumeAsset(contactBodyB as! SKSpriteNode)
+            consumeAsset(&contactBodyB)
             return
             
         case NameKeys.ladybug:
-            consumeAsset(contactBodyB as! SKSpriteNode)
+            consumeAsset(&contactBodyB)
             return
         
         default:
