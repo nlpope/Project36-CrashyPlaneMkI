@@ -398,15 +398,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         let ladybugPoint = CGPoint(
             x: xPosition,
-            y: frame.midY + CGFloat(Int.random(in: 20...50))
+            y: frame.midY + CGFloat(Int.random(in: 50...150))
+            //100 is good for middle so btwn 200 and ...
         )
         
-        configLadybug(at: ladybugPoint)
-        
-        //        if Int.random(in: 1...2) == 1 {
-        //
-        //        }
-        
+        createLadybug(at: ladybugPoint)
         addChildren(topObstacle, bottomObstacle, goalPost)
         
         //-------------------------------------//
@@ -440,7 +436,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func configLadybug(at point: CGPoint)
+    func createLadybug(at point: CGPoint)
     {
         ladybug = SKSpriteNode(texture: ladybugTexture)
         ladybug.name = NameKeys.ladybug
@@ -549,16 +545,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             player.removeFromParent()
             speed = 0
             
-//        case NameKeys.ladybug:
-//            if let coinEmitter = SKEmitterNode(fileNamed: EmitterKeys.consumeLadybug) {
-//                coinEmitter.position = node.position
-//                addChild(coinEmitter)
-//            }
-//            node.removeFromParent()
-//            let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
-//            run(sound)
-//            playerScore += 3
-            
         default:
             break
         }
@@ -604,6 +590,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             
         case .dead:
             if let scene = GameScene(fileNamed: NameKeys.gameScene) {
+                print("playerscore: \(self.playerScore)")
                 scene.scaleMode = .resizeFill
                 let transition = SKTransition.moveIn(
                     with: SKTransitionDirection.right,
@@ -672,21 +659,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         default:
             break
         }
-        
-//        guard contactBodyA.name == NameKeys.goalPost || contactBodyB.name == NameKeys.goalPost || contactBodyA.name == NameKeys.ladybug || contactBodyB.name == NameKeys.ladybug
-//        else { destroy(player); return }
-        
-//        if contactBodyA == player {
-//            if contactBodyB.name == NameKeys.ladybug { destroy(ladybug);  return }
-//            contactBodyB.removeFromParent()
-//        } else {
-//            if contactBodyA.name == NameKeys.ladybug { destroy(ladybug); return }
-//            contactBodyA.removeFromParent()
-//        }
-        
-//        let sound = SKAction.playSoundFileNamed(SoundKeys.coinWav, waitForCompletion: false)
-//        run(sound)
-//        playerScore += 1
         
         return
     }
