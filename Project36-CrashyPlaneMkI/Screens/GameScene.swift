@@ -44,6 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
     var cactusPhysicsBody: SKPhysicsBody!
+    var maxCacOccurrence = 10
     
     let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
     let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
@@ -323,6 +324,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             gravity -= 2
             configPhysicsWorld(dy: gravity)
             print("grav++")
+            maxCacOccurrence = maxCacOccurrence > 4 ? maxCacOccurrence - 1 : maxCacOccurrence
         }
     }
     
@@ -334,7 +336,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         //-------------------------------------//
         // MARK: - OBSTACLE TEXTURING
         
-        let randomInt = Int.random(in: 0...5)
+        let randomInt = Int.random(in: 0...maxCacOccurrence)
         let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
         let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
         let selectedTexture = randomInt == 3 ? cactusTexture : rockTexture
@@ -404,9 +406,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
+        let randomBugPosition = Int.random(in: -20...20)
         let ladybugPoint = CGPoint(
             x: xPosition,
-            y: frame.midY + CGFloat(Int.random(in: 50...150))
+            y: obstacleSafeGap + CGFloat(randomBugPosition)
             //100 is good for middle so btwn 200 and ...
         )
         
