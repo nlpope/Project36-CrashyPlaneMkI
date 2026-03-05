@@ -406,10 +406,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             y: frame.midY
         )
         
-        let randomBugPosition = Int.random(in: -20...20)
+        let ladybugOffset = CGFloat(Int.random(in: -20...60))
         let ladybugPoint = CGPoint(
             x: xPosition,
-            y: obstacleSafeGap + CGFloat(randomBugPosition)
+            y: bottomObstacle.frame.height + ladybugOffset
             //100 is good for middle so btwn 200 and ...
         )
         
