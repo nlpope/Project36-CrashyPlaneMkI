@@ -36,15 +36,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var scoreBoard: SKLabelNode!
     var gravity = -5.0
     var playerScore = 0 {
-        didSet { updateScoreBoard() }
+        didSet { handleScoreChangeEffects() }
     }
+    
+    var durationSpeed = 6.2
     
     let rockTexture = SKTexture(imageNamed: TextureKeys.rockObstacle)
     var rockPhysicsBody: SKPhysicsBody!
     
     let cactusTexture = SKTexture(imageNamed: TextureKeys.cactusObstacle)
     var cactusPhysicsBody: SKPhysicsBody!
-    var maxCacOccurrence = 10
+//    var maxCacOccurrence = 10
+    var maxCacOccurrence = 4
     
     let ladybugTexture = SKTexture(imageNamed: TextureKeys.ladybug)
     let ladybugFlyTexture = SKTexture(imageNamed: TextureKeys.ladybugFly)
@@ -317,7 +320,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     
-    func updateScoreBoard()
+    func handleScoreChangeEffects()
     {
         scoreBoard.text = "SCORE: \(playerScore)"
         if playerScore % 10 == 0 {
@@ -325,6 +328,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             configPhysicsWorld(dy: gravity)
             print("grav++")
             maxCacOccurrence = maxCacOccurrence > 4 ? maxCacOccurrence - 1 : maxCacOccurrence
+            //change to - 0.5
+            durationSpeed = durationSpeed >= 3 ? durationSpeed - 4 : durationSpeed
         }
     }
     
@@ -410,30 +415,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let ladybugPoint = CGPoint(
             x: xPosition,
             y: bottomObstacle.frame.height + ladybugOffset
-            //100 is good for middle so btwn 200 and ...
         )
         
         createLadybug(at: ladybugPoint)
         addChildren(topObstacle, bottomObstacle, goalPost)
         
         //-------------------------------------//
-        // MARK: - X AXIS MOTION
+        // MARK: - OBSTACLE X AXIS MOTION
         
-        let endPosition = frame.width + (topObstacle.frame.width * 2)
+//        let endPosition = frame.width + (topObstacle.frame.width * 2)
+        let endPosition = frame.width + 300
         
         let moveAction = SKAction.moveBy(
             x: -endPosition,
             y: 0,
-            duration: 6.2
+            duration: selectedTexture == cactusTexture ? durationSpeed - 1: durationSpeed
         )
         
         let moveSequence = SKAction.sequence([
             moveAction,
             SKAction.removeFromParent()
         ])
-        
-        //-------------------------------------//
-        // MARK: - OBSTACLE ANIMATIONS
         
         topObstacle.run(moveSequence)
         bottomObstacle.run(moveSequence)
