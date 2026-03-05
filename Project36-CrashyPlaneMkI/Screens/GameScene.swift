@@ -2,6 +2,11 @@
 //  Project: Project36-CrashyPlaneMkI
 //  Created by: Noah Pope on 2/3/26.
 
+#warning("this project is complete but the below bonus features need polishing:")
+//ladybug knocking player back on contact
+//ladybug triggering didBeginContact too many times
+//cacti speed doesn't match rocks when speed is increased
+
 import SpriteKit
 import GameplayKit
 
