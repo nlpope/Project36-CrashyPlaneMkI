@@ -188,7 +188,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // MARK: - GENERAL CONFIGURATION
     /**
      turn silent mode off for music to work
-     SKAudioNode auto loops + non-incidental (.wav) cases
+     SKAudioNode auto loops + non-incidental (|| non-.wav) cases
      */
     
     func configMusic()
